@@ -158,11 +158,20 @@ function dibujarPlaneta(p)
 	var grd = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.rg);
 	
 	if(p.centro){
-		if(p.mayor_t_j != null)
-			grd.addColorStop(0.3,p.mayor_t_j.color);
-		else
-			grd.addColorStop(0,"rgba(80, 200, 80, 0.4)");
-		grd.addColorStop(1,"rgba(80, 200, 80, 0.1)");
+		if(p.mayor_t_j !== null) {
+            var segundo_mayor = 0;
+            for(var idx in jugadores) {
+                if(jugadores.hasOwnProperty(idx) &&
+                    jugadores[idx] !== p.mayor_t_j &&
+                    jugadores[idx].tiempo > segundo_mayor) {
+                        segundo_mayor = jugadores[idx].tiempo;
+                    }
+            }
+	        grd.addColorStop(0.7 * Math.min(p.mayor_t - segundo_mayor, 30) / 30 + 0.2, p.mayor_t_j.color);
+	    } else {
+            grd.addColorStop(0, "rgba(80, 200, 80, 0.4)");
+        }
+        grd.addColorStop(1,"rgba(80, 200, 80, 0.1)");
 	}
 	else if(!p.nodisponible)
 	{
