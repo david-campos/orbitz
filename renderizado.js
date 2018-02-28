@@ -3,7 +3,12 @@ var imgAgujero = new Image();
 var render = function()
 {
     ctx.clearRect(0,0,canvas.width,canvas.height);
-	
+
+    if(scale.update) {
+        scale.update = false;
+        ctx.scale(scale.x, scale.y);
+    }
+
 	//Planetas
 	for(var i in planetas)
 		dibujarPlaneta(planetas[i]);

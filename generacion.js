@@ -9,7 +9,7 @@ var generarPlanetaRandom = function(rmin, rmax)
 	{
 		r = (Math.random() * 10000) % (rmax - rmin) + rmin;
 		rg = r * 2.5;
-	
+
 		vale = true;
 		x = (Math.random() * 10000) % (scr.w - 2*rg) + rg;
 		y = (Math.random() * 10000) % (scr.h - 2*rg) + rg;
@@ -46,8 +46,8 @@ var generarAgujero = function(c, rmin, rmax)
 		vale = true;
 		r = Math.round(Math.random() * (rmax - rmin)) + rmin;
 		
-		x = Math.round(Math.random() * (0.50 * (scr.w - 2*r))) + r + scr.w * 0.25;
-		y = Math.round(Math.random() * (0.50 * (scr.h - 2*r))) + r + scr.h * 0.25;
+		x = Math.round(Math.random() * (scr.w - 4*r)) + r;
+		y = Math.round(Math.random() * (scr.h - 4*r)) + r;
 
 		for(var i in planetas)
 		{

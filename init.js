@@ -1,22 +1,55 @@
 var w = window;
 requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
 
-var scr = {w: 0, h: 0};
+var scr = {h:974, w:1920};
+var scale = {w: 1, h: 1, update: true};
+
+var canvas = document.getElementById("mainframe");
+var ctx = canvas.getContext("2d");
 
 w.onload = function() {
     if(genAgujeros)
         imgAgujero.src = "img/agujero.png";
 
-    scr = {w: window.innerWidth, h: window.innerHeight};
-    canvas.width = scr.w;
-    canvas.height = scr.h;
+    redimensionar(w.innerWidth, w.innerHeight);
 };
 
-var canvas = document.getElementById("mainframe");
-var ctx = canvas.getContext("2d");
+w.onresize = function() {
+    redimensionar(w.innerWidth, w.innerHeight);
+};
 
+function redimensionar(width, height) {
+    if(width < 800 || height < 600) {
+        resolucionInsuficiente(true);
+        return;
+    }
 
-modos = ["Cl·sico", "Instinto", "Centro"];
+    // El canvas tendr√° la resoluci√≥n especificada
+    canvas.width = width;
+    canvas.height = height;
+
+    // Escalamos manteniendo la proporci√≥n
+    var escalaAncho = scr.w / width;
+    var escalaAlto = scr.h / height;
+
+    if(escalaAncho > escalaAlto) {
+
+    }
+
+    scale = {
+        w: scr.w / width,
+        h: scr.h / height,
+        update: true
+    };
+}
+
+// Funci√≥n llamada cuando la resoluci√≥n
+// es demasiado baja
+function resolucionInsuficiente() {
+
+}
+
+modos = ["Cl√°sico", "Instinto", "Centro"];
 
 var then;
 function iniciar() {
@@ -51,9 +84,9 @@ var restart = function()
 	jugador.ultId = 1;
 	
 	//MODOS
-	// 0 -> Cl·sico (El ˙ltimo vivo gana.)
+	// 0 -> Cl√°sico (El √∫ltimo vivo gana.)
 	// 1 -> Instinto (El que muere menos veces gana.)
-	// 2 -> El centro (Dominar planeta central por m·s tiempo.)
+	// 2 -> El centro (Dominar planeta central por m√°s tiempo.)
 	if(!modo || modo < 0 || modo > 2) modo = 0;
 	
 	var i=0;
@@ -137,7 +170,7 @@ var restart = function()
 	if(genAgujeros)
 	{
 		for(i=0;i < maxAgujeros;i++)
-			generarAgujero(10,50,100);
+			generarAgujero(10,50,70);
 	}	
 	inicio_partida = Date.now();
 	gamefin = false;
@@ -145,7 +178,7 @@ var restart = function()
 };
 
 var game = function()
-//FunciÛn de actualizaciÛn del juego.
+//Funci√≥n de actualizaci√≥n del juego.
 {
 	var now = Date.now();
 	var delta = now - then;
@@ -153,12 +186,12 @@ var game = function()
     if(delta == 0)
     {
         delta = 1;
-        console.log("Fallo en la mediciÛn de tiempos.\n");
+        console.log("Fallo en la medici√≥n de tiempos.\n");
     }
     update(delta / 1000);
     render();
 
-	if(duracion > 0 && modo != 0 && now - inicio_partida > duracion * 60000) //Fin de partida en modo no cl·sico
+	if(duracion > 0 && modo != 0 && now - inicio_partida > duracion * 60000) //Fin de partida en modo no cl√°sico
 		finalizar(null);
 
 	for(var i in notas)
@@ -227,7 +260,7 @@ var update = function(secs)
 				}
 			}
 			
-			//ComprobaciÛn colisiones
+			//Comprobaci√≥n colisiones
 			if(!pl.invisible)
 			{
 				if(pos.length > 0)
@@ -244,19 +277,19 @@ var update = function(secs)
 								pl.vR *= -1;
 								bolas[pos[j].id].vR *= -1;
 								
-								if( pvR <= bvR && !pl.invencible) //pl m·s lento
+								if( pvR <= bvR && !pl.invencible) //pl m√°s lento
 								{
 									pl.vR *= 1.35;
 									bolas[pos[j].id].vR *= 0.85;
 									pl.salirOrb();
 								}
-								if( pvR >= bvR && !bolas[pos[j].id].invencible) //pl m·s r·pido
+								if( pvR >= bvR && !bolas[pos[j].id].invencible) //pl m√°s r√°pido
 								{
 									pl.vR *= 0.85;
 									bolas[pos[j].id].vR *= 1.35;
 									bolas[pos[j].id].salirOrb();
 								}
-							}else{ //Choque por detr·s
+							}else{ //Choque por detr√°s
 								if(Math.abs(pl.vR) < Math.abs(bolas[pos[j].id].vR))
 								{
 									pl.vR = bolas[pos[j].id].vR;
@@ -280,7 +313,7 @@ var update = function(secs)
 				pos.push({x: pl.x, y: pl.y, id: i});
 			}
 		}else{
-			//No est· en Ûrbita
+			//No est√° en √≥rbita
 			pl.x += pl.v.x * secs;
 			pl.y += pl.v.y * secs;
             
@@ -349,7 +382,7 @@ var update = function(secs)
 		}
 
 		var planet = enOrbita(pl);
-		if( (!pl.jugador || !keysDown[pl.jugador.controlId]) && planet && !pl.planeta) //Cuando toca por primera vez una Ûrbita
+		if( (!pl.jugador || !keysDown[pl.jugador.controlId]) && planet && !pl.planeta) //Cuando toca por primera vez una √≥rbita
 		{
 			pl.planeta = planet;
 			var dx = pl.x - planet.x;
@@ -490,7 +523,7 @@ var update = function(secs)
 	
 	for(var i in planetasND)
 	{
-		planetasND[i].nodisponible -= 1; //Volver· a estar disponible tarde o temprano
+		planetasND[i].nodisponible -= 1; //Volver√° a estar disponible tarde o temprano
 		if(planetasND[i].nodisponible < 1)
 		{
 			planetasND[i].nodisponible = 0;
@@ -503,7 +536,7 @@ function finalizar(vividor)
 {
 	switch(modo)
 	{
-		case 0: //Cl·sico
+		case 0: //Cl√°sico
 			nota("Ganador jugador " + vividor.id, vividor.color);
 			break;
 		case 1: //Muertes
@@ -518,7 +551,7 @@ function finalizar(vividor)
 				if(mils < 100) mils = "0"+mils.toString();
 				if(mils < 10) mils = "0"+mils.toString();				
 				
-				nota("Jugador " + (jugadores[i].id) + ": " + jugadores[i].muertes + " muertes. ⁄ltima ("+mins+"' "+secs+"\" "+mils+")", jugadores[i].color);
+				nota("Jugador " + (jugadores[i].id) + ": " + jugadores[i].muertes + " muertes. √öltima ("+mins+"' "+secs+"\" "+mils+")", jugadores[i].color);
                 if(empate && jugadores[i].muertes != 0)
                     empate = false;
 				if(jugadores[i].muertes < jugadores[menor].muertes || (jugadores[i].muertes == jugadores[menor].muertes && jugadores[i].ultimaMuerte > jugadores[menor].ultimaMuerte ))
