@@ -8,14 +8,12 @@
     <link rel="stylesheet" href="css/cyborg.css">
     <link rel="stylesheet" href="css/estilos.css">
     <link href="https://fonts.googleapis.com/css?family=Orbitron:400,500,900|Raleway" rel="stylesheet">
-
 </head>
 <body>
 <div class="container">
-    <audio src="../snd/curves_julien_menu.mp3" autoplay loop style="display: none"></audio>
     <h1>ORBITZ</h1>
     <!-- Modos de juego -->
-    <div class="row" id="modos">
+    <div class="row center" id="modos">
         <div class="col-md-4">
             <div class="card text-white bg-primary mb-3">
                 <div class="card-header"><h4 class="card-title">Classic</h4></div>
@@ -25,7 +23,7 @@
                         Destroy all your enemies!
                     </p>
 
-                    <a class="btn btn-outline-primary btn_start" id="start_classic">Start</a>
+                    <a class="btn btn-outline-primary btn-lg btn-block btn_start" id="start_classic">Start</a>
                 </div>
             </div>
         </div>
@@ -35,9 +33,9 @@
                 <div class="card-body">
 
                     <p class="card-text">
-                    Will you be the last standing?
+                        Will you be the last standing?
                     </p>
-                        <a class="btn btn-outline-primary btn_start" id="start_instint">Start</a>
+                    <a class="btn btn-outline-primary btn-lg btn-block btn_start" id="start_instint">Start</a>
                 </div>
             </div>
         </div>
@@ -48,7 +46,7 @@
 
                     <p class="card-text">Conquer the center!</p>
 
-                        <a class="btn btn-outline-primary btn_start" id="start_center">Start</a>
+                    <a class="btn btn-outline-primary btn-lg btn-block btn_start" id="start_center">Start</a>
                 </div>
             </div>
         </div>
@@ -58,34 +56,131 @@
 
     <!-- Interfaz -->
     <div class="card text-white bg-primary mb-3" style="display: none" id="interfaz">
-        <div class="card-header"><h4 class="card-title">cona david que pesau</h4></div>
+        <div class="card-header"><h4 class="card-title">Game options</h4></div>
         <div class="card-body">
 
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <p class="card-text">Customize your game!</p>
+
+            <div class="row">
+                <div class="col-md-3" id="player_1">
+                    <p>
+                        <svg width="20" height="20">
+                            <rect width="20" height="20" style="fill:#000099;" rx="2" ry="2"></rect>
+                        </svg>&nbsp;&nbsp;&nbsp;
+
+                        Space key
+                    </p>
+                </div>
+                <div class="col-md-3" id="player_2">
+                    <p>
+                        <svg width="20" height="20">
+                            <rect width="20" height="20" style="fill:#990000;" rx="2" ry="2"></rect>
+                        </svg>&nbsp;&nbsp;&nbsp;
+
+                        Enter key
+                    </p>
+                </div>
+                <div class="col-md-3" id="player_3" style="opacity:0">
+                    <p>
+                        <svg width="20" height="20">
+                            <rect width="20" height="20" style="fill:#009900;" rx="2" ry="2"></rect>
+                        </svg>&nbsp;&nbsp;&nbsp;
+
+                        Q key
+                    </p>
+                </div>
+                <div class="col-md-3" id="player_4" style="opacity:0">
+                    <p>
+                        <svg width="20" height="20">
+                            <rect width="20" height="20" style="fill:#999900;" rx="2" ry="2"></rect>
+                        </svg>&nbsp;&nbsp;&nbsp;
+
+                        Dot key (.)
+                    </p>
+                </div>
+            </div>
+
+            <a class="btn btn-outline-primary" id="addPlayer">Add player</a>
+            <a class="btn btn-outline-primary" id="removePlayer">Remove player</a>
+
 
             <form action="">
-                <a class="btn btn-outline-primary" id="addPlayer">Add player</a>
+
                 <br>
-                <input type="checkbox" value="" checked> Black holes
-                <input type="checkbox" value=""> Harmless
+
+                <label>
+                    <input type="checkbox" value="" id="blackholes" checked>
+                    Black holes
+                </label>
+                <label id="harmlessLabel">
+                    <input type="checkbox" id="harmless" value="">
+                    Harmless
+                </label>
+                <br>
+                <a class="btn btn-outline-primary btn-block" id="initGame">Start game!</a>
             </form>
 
         </div>
     </div>
 </div>
 
+<audio src="../snd/curves_julien_menu.mp3" autoplay loop style="display: none"></audio>
 <script>
+    /*
     document.getElementById('addPlayer').onclick = function (ev) {
         alert("hola");
     };
+*/
 
-    var botones = document.getElementsByClassName('btn_start');
-Array.prototype.filter.call(botones, function(value) {
-    value.onclick = function(ev) {
-        document.getElementById('modos').style.display = 'none';
-        document.getElementById('interfaz').style.display = 'block';
+    // Iniciar partida
+    const addPlayer = document.getElementById('addPlayer');
+    const removePlayer = document.getElementById('removePlayer');
+    const blackholes = document.getElementById('blackholes');
+    const harmlessLabel = document.getElementById('harmlessLabel');
+    const initGame = document.getElementById('initGame');
+
+    const botones = document.getElementsByClassName('btn_start');
+    Array.prototype.filter.call(botones, function (value) {
+        value.onclick = function (ev) {
+            document.getElementById('modos').style.display = 'none';
+            document.getElementById('interfaz').style.display = 'block';
+        }
+    });
+
+    // Añadir jugador
+    let jugadoresN = 2;
+    addPlayer.onclick = function (ev) {
+        ++jugadoresN;
+        actualizar();
+    };
+
+    removePlayer.onclick = function (ev) {
+        --jugadoresN;
+        actualizar();
+    };
+    
+    function actualizar() {
+        removePlayer.style.display = 'inline-block';
+        addPlayer.style.display = 'inline-block';
+        if (jugadoresN === 2) {
+            removePlayer.style.display = 'none';
+        }
+        if (jugadoresN === 4) {
+            addPlayer.style.display = 'none';
+        }
+        for (let i = 1; i <= 4; ++i) {
+            let mostrar = i <= jugadoresN;
+            document.getElementById('player_' + i).style.opacity = (mostrar ? "1" : "0");
+        }
     }
-});
+
+    blackholes.onchange = function(ev) {
+        harmlessLabel.style.display = (this.checked ? 'inline-block' : 'none');
+    };
+
+    initGame.onclick = function() {
+        alert("empiesa no mas");
+    }
 
 </script>
 

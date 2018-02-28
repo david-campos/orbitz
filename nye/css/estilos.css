@@ -23,8 +23,18 @@ html {
 .card {
     background-color: rgba(30, 18, 90, 0.8) !important;
     border: 2px solid #EEE;
-    text-align: center;
     box-shadow: 0 0 10px #4b2d91, 0 0 10px #4b2d91;
+}
+
+svg {
+    display: inline-block;
+    vertical-align: middle;
+    border: 2px solid rgba(255,255,255,0.54);
+    border-radius: 5px;
+}
+
+.center {
+   text-align: center
 }
 .card-text {
     font-size: 1.3em
