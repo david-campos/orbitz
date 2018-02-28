@@ -40,8 +40,9 @@ function redimensionar(width, height) {
     var escalaAlto = height / scr.h;
 
     escala = {
-        w: escalaAncho>escalaAlto? escalaAncho * height * scr.ar / width: escalaAncho,
-        h: escalaAlto>=escalaAncho? escalaAlto * width / scr.ar / height: escalaAlto,
+        w: escalaAncho>escalaAlto? escalaAlto: escalaAncho,
+        h: escalaAlto>=escalaAncho? escalaAncho: escalaAlto,
+		dominaAncho: escalaAlto>=escalaAncho,
         update: true
     };
 }

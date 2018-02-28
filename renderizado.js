@@ -6,6 +6,11 @@ var render = function()
 
     if(escala.update) {
         escala.update = false;
+        ctx.restore();
+        ctx.save();
+        if(escala.dominaAncho && escala.h < 1) {
+            ctx.translate(0, (canvas.height - escala.h * scr.h) * 0.5);
+        }
         ctx.scale(escala.w, escala.h);
     }
 
