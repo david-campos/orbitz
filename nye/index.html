@@ -7,13 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="css/cyborg.css">
     <link rel="stylesheet" href="css/estilos.css">
-    <link href="https://fonts.googleapis.com/css?family=Orbitron:400,900|Raleway" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Orbitron:400,500,900|Raleway" rel="stylesheet">
 
 </head>
 <body>
 <div class="container">
     <h1>ORBITZ</h1>
-    <div class="row">
+    <!-- Modos de juego -->
+    <div class="row" id="modos">
         <div class="col-md-4">
             <div class="card text-white bg-primary mb-3">
                 <div class="card-header"><h4 class="card-title">Classic</h4></div>
@@ -23,7 +24,7 @@
                         Destroy all your enemies!
                     </p>
 
-                    <a class="btn btn-outline-primary">Start</a>
+                    <a class="btn btn-outline-primary btn_start" id="start_classic">Start</a>
                 </div>
             </div>
         </div>
@@ -33,9 +34,9 @@
                 <div class="card-body">
 
                     <p class="card-text">
-                    Die the less the better!
+                    Will you be the last standing?
                     </p>
-                        <a class="btn btn-outline-primary">Start</a>
+                        <a class="btn btn-outline-primary btn_start" id="start_instint">Start</a>
                 </div>
             </div>
         </div>
@@ -46,14 +47,16 @@
 
                     <p class="card-text">Conquer the center!</p>
 
-                        <a class="btn btn-outline-primary">Start</a>
+                        <a class="btn btn-outline-primary btn_start" id="start_center">Start</a>
                 </div>
             </div>
         </div>
 
 
     </div>
-    <div class="card text-white bg-primary mb-3">
+
+    <!-- Interfaz -->
+    <div class="card text-white bg-primary mb-3" style="display: none" id="interfaz">
         <div class="card-header"><h4 class="card-title">cona david que pesau</h4></div>
         <div class="card-body">
 
@@ -73,9 +76,16 @@
 <script>
     document.getElementById('addPlayer').onclick = function (ev) {
         alert("hola");
-    }
+    };
 
-    document.getElementById('addPlayer').click();
+    var botones = document.getElementsByClassName('btn_start');
+Array.prototype.filter.call(botones, function(value) {
+    value.onclick = function(ev) {
+        document.getElementById('modos').style.display = 'none';
+        document.getElementById('interfaz').style.display = 'block';
+    }
+});
+
 </script>
 
 </body>

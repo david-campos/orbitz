@@ -21,12 +21,17 @@ html {
 
 
 .card {
-    background-color: #1E125A !important;
+    background-color: rgba(30, 18, 90, 0.8) !important;
     border: 2px solid #EEE;
     text-align: center;
+    box-shadow: 0 0 10px #4b2d91, 0 0 10px #4b2d91;
 }
 .card-text {
     font-size: 1.3em
+}
+
+.btn {
+    box-shadow: 0 0 5px #4b2d91;
 }
 
 .card-header {
@@ -34,6 +39,8 @@ html {
     margin-bottom: 0;
     background-color: rgba(0, 0, 0, 0.3);
     border-bottom: 2px solid #eee;
+    font-weight: 500;
+    letter-spacing: 1px;
 }
 h1, h2, h3, h4 {
     font-family: orbitron, sans-serif;
@@ -45,7 +52,7 @@ h4.card-title {
 body {
     font-family: Raleway, arial, sans-serif;
     background: inherit;
-    margin: 5em auto;
+    margin: 15vh auto;
 }
 
 h1 {
@@ -53,5 +60,6 @@ h1 {
     font-weight: bolder;
     font-size: 101px;
     letter-spacing: 5px;
-    margin-bottom: 4rem
+    margin-bottom: 4rem;
+    text-shadow: 0 0 10px #6f42c1, 0 0 10px #6f42c1;
 }
