@@ -17,7 +17,7 @@ const radioJug = 10;
 function jugador(color, controlId) {
     this.bolas = 0;
     this.muertes = 0;
-    this.tiempo = 0;
+    this.tiempo = 0; // tiempo en el centro
     this.color = color;
     this.controlId = controlId;
     this.ultimaMuerte = 0;

@@ -125,7 +125,7 @@ var restart = function()
 			if(planetasMax == -1) planetasMax = bolasN;
 			
 			for(i=i;i<planetasMax; i++)
-				if(!generarPlanetaRandom(20, 40))
+				if(!generarPlanetaRandom(30, 50))
 					break;
 
 			//Generar jugadores
