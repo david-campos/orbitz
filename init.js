@@ -1,21 +1,30 @@
 var w = window;
 requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
 
-//Creamos la escena y esperamos por la colección de imágenes.
+var scr = {w: 0, h: 0};
+
+w.onload = function() {
+    if(genAgujeros)
+        imgAgujero.src = "img/agujero.png";
+
+    scr = {w: window.innerWidth, h: window.innerHeight};
+    canvas.width = scr.w;
+    canvas.height = scr.h;
+};
+
 var canvas = document.getElementById("mainframe");
 var ctx = canvas.getContext("2d");
 
-var scr = {w: 1024, h: 576};
-canvas.height = scr.h;
-canvas.width = scr.w;
-document.getElementById("bkgrd").height = scr.h;
-document.getElementById("bkgrd").width = scr.w;
-
-bg.image.src = "img/background.png";
-if(genAgujeros)
-	imgAgujero.src = "img/agujero.png";
 
 modos = ["Clásico", "Instinto", "Centro"];
+
+var then;
+function iniciar() {
+    then = Date.now();
+    document.getElementById("inicio").style.display = "none";
+    document.getElementById("juego").style.display = "block";
+    restart();
+}
 
 var inicio_partida=0;
 var restart = function()
@@ -489,16 +498,6 @@ var update = function(secs)
 		}
 	}
 };
-
-var then;
-function iniciar()
-{
-	then = Date.now();
-	document.getElementById("inicio").style.display = "none";
-	document.getElementById("juego").style.display = "block";
-	document.location.hash = "#noinit";
-	restart();
-}
 
 function finalizar(vividor)
 {

@@ -13,23 +13,22 @@
 		var coloreF = ["#000099", "#990000", "#009900", "#999900", "#009999", "#990099", "#444444", "#FF8000", "#FF7777", "#77FF77"];
 		var controles = [32,13,81,226,106,220,68,71,74,76];
 		var controlesNombre = ["Espacio", "Enter", "Tecla Q", "Tecla >", "Asterisco(*)", "Tecla º", "Tecla D", "Tecla G", "Tecla J", "Tecla L"];
-		var bolasN = 2;
+		var bolasN = 15;
 		var jugadoresN = 2;
 		var bolasXjugador = 1;
-		var planetasMax = 10;
+		var planetasMax = 20;
 		var genAgujeros = true;
-		var maxAgujeros = 4;
+		var maxAgujeros = 8;
 		var agujerosInofensivos = false;
 		var modo = 0;
 		var duracion = 60;
 	</script>
 </head>
-<body style="background-color: black; margin: 0; padding: 0; color: white;">
+<body style="height: 100%; width: 100%; background-color: black; margin: 0; padding: 0; color: white;">
 	<div id="juego" style="display: none">
-		<div id="datos" style="text-shadow: 1px 1px 1px gray; font-weight: bold;"></div>
-		<canvas id="bkgrd" style="z-index: 0; position: absolute; left: 50%; top: 50%; margin-left: -512px;margin-top: -288px;">
-		</canvas>
-		<canvas id="mainframe" style="z-index: 1; position: absolute; left: 50%; top: 50%; margin-left: -512px;margin-top: -288px;">
+		<div id="datos" style="text-shadow: 1px 1px 1px gray; font-weight: bold; position: absolute;"></div>
+		<img id="bkgrd" src="img/background.png" style="z-index: 0; width: 100%; height: 100%; position: absolute;">
+		<canvas id="mainframe" style="z-index: 1; width: 100%; height: 100%; position: absolute;">
 			Tu navegador es un pringuis, no puedes soportar la etiqueta canvas. :(
 		</canvas>
 	</div>

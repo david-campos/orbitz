@@ -4,7 +4,7 @@ var generarPlanetaRandom = function(rmin, rmax)
 	var vale, max;
 	var x, y, r, rg;
 	
-	max = Date.now() + 1000; //1 segundo para generar de m·ximo
+	max = Date.now() + 1000; //1 segundo para generar de m√°ximo
 	do
 	{
 		r = (Math.random() * 10000) % (rmax - rmin) + rmin;
@@ -40,7 +40,7 @@ var generarAgujero = function(c, rmin, rmax)
 
 	vale = false;
 
-	max = Date.now() + 1000; //1 segundo para generar de m·ximo
+	max = Date.now() + 1000; //1 segundo para generar de m√°ximo
 	do
 	{
 		vale = true;

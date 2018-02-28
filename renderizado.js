@@ -1,13 +1,8 @@
-var bg = new Object();
-bg.image = new Image();
-bg.image.onload = function () {
-	document.getElementById("bkgrd").getContext("2d").drawImage(bg.image, 0, 0, scr.w, scr.h);
-};
 var imgAgujero = new Image();
 
 var render = function()
 {
-	ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.clearRect(0,0,canvas.width,canvas.height);
 	
 	//Planetas
 	for(var i in planetas)
