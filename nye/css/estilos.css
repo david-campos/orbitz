@@ -23,6 +23,10 @@ html {
 .card {
     background-color: #1E125A !important;
     border: 2px solid #EEE;
+    text-align: center;
+}
+.card-text {
+    font-size: 1.3em
 }
 
 .card-header {
@@ -30,7 +34,6 @@ html {
     margin-bottom: 0;
     background-color: rgba(0, 0, 0, 0.3);
     border-bottom: 2px solid #eee;
-
 }
 h1, h2, h3, h4 {
     font-family: orbitron, sans-serif;
