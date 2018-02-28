@@ -10,9 +10,10 @@
 	<script src="scripts.js" type="text/javascript"></script>
 	<script src="input.js" type="text/javascript"></script>
 	<script type="text/javascript">
+		var iniciado = false;
 		var coloreF = ["#000099", "#990000", "#009900", "#999900", "#009999", "#990099", "#444444", "#FF8000", "#FF7777", "#77FF77"];
 		var controles = [32,13,81,226,106,220,68,71,74,76];
-		var controlesNombre = ["Espacio", "Enter", "Tecla Q", "Tecla >", "Asterisco(*)", "Tecla บ", "Tecla D", "Tecla G", "Tecla J", "Tecla L"];
+		var controlesNombre = ["Espacio", "Enter", "Tecla Q", "Tecla >", "Asterisco(*)", "Tecla ยบ", "Tecla D", "Tecla G", "Tecla J", "Tecla L"];
 		var bolasN = 15;
 		var jugadoresN = 2;
 		var bolasXjugador = 1;
@@ -32,6 +33,7 @@
 			Tu navegador es un pringuis, no puedes soportar la etiqueta canvas. :(
 		</canvas>
 	</div>
+	<div id="resIns" style="display: none;"></div>
 	<div id="inicio">
 		<input type="button" value="Comenzar" onclick="iniciar();">
 	</div>

@@ -2,11 +2,11 @@ var imgAgujero = new Image();
 
 var render = function()
 {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.clearRect(0,0,canvas.width / escala.w,canvas.height / escala.h);
 
-    if(scale.update) {
-        scale.update = false;
-        ctx.scale(scale.x, scale.y);
+    if(escala.update) {
+        escala.update = false;
+        ctx.scale(escala.w, escala.h);
     }
 
 	//Planetas

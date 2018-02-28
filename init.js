@@ -1,11 +1,16 @@
 var w = window;
 requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
 
+const MIN_W = 800;
+const MIN_H = 600;
+
 var scr = {h:974, w:1920};
-var scale = {w: 1, h: 1, update: true};
+scr.ar = scr.w / scr.h;
+var escala = {w: 1, h: 1, update: true};
 
 var canvas = document.getElementById("mainframe");
 var ctx = canvas.getContext("2d");
+var pause = false;
 
 w.onload = function() {
     if(genAgujeros)
@@ -19,9 +24,11 @@ w.onresize = function() {
 };
 
 function redimensionar(width, height) {
-    if(width < 800 || height < 600) {
+    if(width < MIN_W || height < MIN_H) {
         resolucionInsuficiente(true);
         return;
+    } else {
+        resolucionInsuficiente(false);
     }
 
     // El canvas tendrá la resolución especificada
@@ -29,24 +36,30 @@ function redimensionar(width, height) {
     canvas.height = height;
 
     // Escalamos manteniendo la proporción
-    var escalaAncho = scr.w / width;
-    var escalaAlto = scr.h / height;
+    var escalaAncho = width / scr.w;
+    var escalaAlto = height / scr.h;
 
-    if(escalaAncho > escalaAlto) {
-
-    }
-
-    scale = {
-        w: scr.w / width,
-        h: scr.h / height,
+    escala = {
+        w: escalaAncho>escalaAlto? escalaAncho * height * scr.ar / width: escalaAncho,
+        h: escalaAlto>=escalaAncho? escalaAlto * width / scr.ar / height: escalaAlto,
         update: true
     };
 }
 
 // Función llamada cuando la resolución
 // es demasiado baja
-function resolucionInsuficiente() {
-
+function resolucionInsuficiente(activo) {
+    if(activo && !pause) {
+        document.getElementById("juego").style.display = "none";
+        document.getElementById("resIns").style.display = "block";
+        document.getElementById("resIns").innerHTML =
+            "Resolución insuficiente, la resolución mínima es " + MIN_W + "x" + MIN_H + ".";
+    }
+    if(!activo && iniciado) {
+        document.getElementById("juego").style.display = "block";
+        document.getElementById("resIns").style.display = "none";
+    }
+    pause = activo;
 }
 
 modos = ["Clásico", "Instinto", "Centro"];
@@ -173,6 +186,7 @@ var restart = function()
 			generarAgujero(10,50,70);
 	}	
 	inicio_partida = Date.now();
+	iniciado = true;
 	gamefin = false;
 	game();
 };
@@ -182,26 +196,26 @@ var game = function()
 {
 	var now = Date.now();
 	var delta = now - then;
-	
-    if(delta == 0)
-    {
+
+    if(delta === 0) {
         delta = 1;
         console.log("Fallo en la medición de tiempos.\n");
     }
-    update(delta / 1000);
-    render();
 
-	if(duracion > 0 && modo != 0 && now - inicio_partida > duracion * 60000) //Fin de partida en modo no clásico
-		finalizar(null);
+    if(!pause) {
+        update(delta / 1000);
+        render();
 
-	for(var i in notas)
-	{
-		if(notas[i].t < now)
-		{
-			notas.splice(i, 1);
-			i-=1;
-		}
-	}
+        if (duracion > 0 && modo != 0 && now - inicio_partida > duracion * 60000) //Fin de partida en modo no clásico
+            finalizar(null);
+
+        for (var i in notas) {
+            if (notas[i].t < now) {
+                notas.splice(i, 1);
+                i -= 1;
+            }
+        }
+    }
     then = now;
 	// Request to do this again ASAP
 	if(!gamefin) requestAnimationFrame(game);
