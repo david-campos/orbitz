@@ -29,7 +29,7 @@ html {
 svg {
     display: inline-block;
     vertical-align: middle;
-    border: 2px solid rgba(255,255,255,0.54);
+    border: 1px solid #eeeeee;
     border-radius: 5px;
 }
 
