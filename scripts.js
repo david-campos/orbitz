@@ -1,20 +1,3 @@
-function enOrbita(pl)
-// Comprueba
-{
-	for(var i in planetas)
-	{
-		if(planetas.hasOwnProperty(i)) {
-            var p = planetas[i];
-            if ((p.nodisponible && !pl.gravedad) || pl.planetaAnt === p) continue;
-
-            //Vamos a obtener la menor distancia del segmento (pl.anterior_pos pl.pos) al centro del planeta
-            var d = menorDistanciaPS(pl.anterior_pos, pl, p);
-            if (d <= p.rg + radioJug && d >= p.rg - radioJug)
-                return p;
-        }
-	}
-	return null;
-}
 function menorDistanciaPS(A, B, C)
 // Menor distancia del segmento AB al punto C
 {
@@ -37,23 +20,24 @@ function menorDistanciaPS(A, B, C)
         }
     }
 }
-function signo(n)
-{
+function signo(n) {
 	if(n < 0) return -1;
 	else return 1;
 }
 
-function moduloVector(x, y)
-{
-	return Math.sqrt( Math.pow(x, 2) + Math.pow(y, 2) );
+function moduloVector(x, y) {
+	return Math.sqrt( x*x + y*y );
 }
 
-function nota(mensaje, color)
-{
+/**
+ *
+ * @param mensaje
+ * @param {Jugador} [jugador]
+ */
+function Nota(mensaje, jugador) {
 	var miNota = {};
 	miNota.mensaje = mensaje;
 	miNota.t = Date.now() + 5000;
-	miNota.color = color;
-	
+	miNota.color = jugador?jugador.color:"gray";
 	notas.push(miNota);
 }

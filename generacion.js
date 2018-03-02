@@ -1,90 +1,72 @@
 //Generacion nivel
-var generarPlanetaRandom = function(rmin, rmax)
-{
+var globf_generarPlanetaRandom = function(rmin, rmax, juego) {
 	var vale, max;
 	var x, y, r, rg;
 	
 	max = Date.now() + 1000; //1 segundo para generar de máximo
-	do
-	{
+	do {
 		r = (Math.random() * 10000) % (rmax - rmin) + rmin;
 		rg = r * 2.5;
 
 		vale = true;
-		x = (Math.random() * 10000) % (scr.w - 2*rg) + rg;
-		y = (Math.random() * 10000) % (scr.h - 2*rg) + rg;
+		x = (Math.random() * 10000) % (MAP.w - 2*rg) + rg;
+		y = (Math.random() * 10000) % (MAP.h - 2*rg) + rg;
 		
-		for(var i in planetas)
-		{
-			var otroP = planetas[i];
-			if( moduloVector(otroP.x - x, otroP.y - y) < otroP.rg + rg + 2*radioJug)
+		for(var i in juego.planetas) {
+			var otroP = juego.planetas[i];
+			if( moduloVector(otroP.x - x, otroP.y - y) < otroP.rg + rg + 2*RADIO_BOLAS)
 			{
 				vale = false;
 				break;
 			}
 		}
-	}while(!vale && Date.now() < max);
+	} while(!vale && Date.now() < max);
 	
-	if(!vale) return false;
-	
-	var miP = new planeta(x, y, r, rg);
-	
-	planetas.push(miP);
-	
-	return true;
+	if(!vale) return null;
+	return new Planeta(x, y, r, rg);
 };
-var generarAgujero = function(c, rmin, rmax)
-{
+var globf_generarAgujeroRandom = function(c, rmin, rmax, juego) {
 	var vale, max;
 	var x, y, r;
 
 	vale = false;
 
 	max = Date.now() + 1000; //1 segundo para generar de máximo
-	do
-	{
+	do {
 		vale = true;
 		r = Math.round(Math.random() * (rmax - rmin)) + rmin;
 		
-		x = Math.round(Math.random() * (scr.w - 4*r)) + r;
-		y = Math.round(Math.random() * (scr.h - 4*r)) + r;
+		x = Math.round(Math.random() * (MAP.w - 4*r)) + r;
+		y = Math.round(Math.random() * (MAP.h - 4*r)) + r;
 
-		for(var i in planetas)
-		{
-			var otroP = planetas[i];
-			if( moduloVector(otroP.x - x, otroP.y - y) < otroP.rg + r + 2*radioJug)
-			{
+		for(var i in juego.planetas) {
+			var otroP = juego.planetas[i];
+			if( moduloVector(otroP.x - x, otroP.y - y) < otroP.rg + r + 2*RADIO_BOLAS) {
 				vale = false;
 				break;
 			}
 		}
 		if(vale)
-			for(var i in agujeros)
-			{
-				var otroA = agujeros[i];
-				if(moduloVector(otroA.x - x, otroA.y - y) < otroA.r + r + 2*radioJug)
-				{
+			for(i in juego.agujeros) {
+				var otroA = juego.agujeros[i];
+				if(moduloVector(otroA.x - x, otroA.y - y) < otroA.r + r + 2*RADIO_BOLAS) {
 					vale = false;
 					break;
 				}
 			}
 	}while(!vale && Date.now() < max);
 	
-	if(!vale) return false;
+	if(!vale) return null;
 	
 	var a = Math.random() * (r / rmax) * 1500 + 500;
-	
-	var miA = new agujero(x, y, r, c, a);
-	agujeros.push(miA);
-	
-	return true;
+	return new Agujero(x, y, r, c, a);
 };
 
 //Generacion ingame
-var generarAsteroide = function()
-{
-	var p = Math.floor(Math.random() * planetas.length);
+var globf_generarAsteroide = function(juego)  {
+	var p = Math.floor(Math.random() * juego.planetas.length);
 	var ang = Math.floor(Math.random() * 2.5 * Math.PI);
-	var miAst = new asteroide(planetas[p].x + planetas[p].rg * Math.cos(ang), planetas[p].y + planetas[p].rg * Math.sin(ang));
-	asteroides.push(miAst);
+	return new Asteroide(
+		juego.planetas[p].x + juego.planetas[p].rg * Math.cos(ang),
+		juego.planetas[p].y + juego.planetas[p].rg * Math.sin(ang));
 };
