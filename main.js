@@ -2,6 +2,12 @@ requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnim
 
 window.onload = function() {
     imgAgujero.src = "img/Agujero.png";
+    iconos_asteroides.invencible.src = "img/ico_escudo.png";
+    iconos_asteroides.invisible.src = "img/ico_ojo.png";
+    iconos_asteroides.fortuna.src = "img/ico_trebol.png";
+    iconos_asteroides.gravedad.src = "img/ico_ancla.png";
+    iconos_asteroides.salvador.src = "img/ico_corazon.png";
+    iconos_asteroides.transporte.src = "img/ico_rayo.png";
     canvas = document.getElementById("mainframe");
     ctx = canvas.getContext("2d");
 
@@ -34,6 +40,6 @@ function iniciar() {
             new Jugador("#900", 32, 90), // Spacebar, Z
             new Jugador("#090", 13, 191) // Enter, Ç
         ],
-        MODOS.CLASICO, 20, 2, -1, 5, false);
+        MODOS.CENTRO, 20, 2, 0.2, 5, false);
     juego.start();
 }
