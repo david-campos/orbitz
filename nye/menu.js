@@ -9,14 +9,35 @@ window.onload = function () {
     const mute = document.getElementById('mute');
     const sonido = document.getElementById('sonido');
 
+    const modos = document.getElementById('modos');
+    const interfaz = document.getElementById('interfaz');
+    const creditos = document.getElementById('creditos');
+
+    const goCredits = document.getElementById('goCredits');
+
     // Al hacer click en los botones iniciales, pasar a la siguiente pantalla
     const botones = document.getElementsByClassName('btn_start');
     Array.prototype.filter.call(botones, function (value) {
         value.onclick = function (ev) {
-            document.getElementById('modos').style.display = 'none';
-            document.getElementById('interfaz').style.display = 'block';
+           modos.style.display = 'none';
+            interfaz.style.display = 'block';
         }
     });
+
+    const goBack = document.getElementsByClassName('goBack');
+    Array.prototype.filter.call(goBack, function (value) {
+        value.onclick = function (ev) {
+            modos.style.display = 'block';
+            interfaz.style.display = 'none';
+            creditos.style.display = 'none';
+        }
+    });
+
+    goCredits.onclick = function(ev) {
+        modos.style.display = 'none';
+        interfaz.style.display = 'none';
+        creditos.style.display = 'block';
+    };
 
     // Añadir jugador
     let jugadoresN = 2;

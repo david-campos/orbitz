@@ -91,6 +91,12 @@ h1 {
     padding: 0;
 }
 
+.btn-primary:hover {
+    color: #fff;
+    background-color: rgba(111, 66, 193, 0.5);
+    border-color: rgb(30, 18, 90);
+}
+
 #sonido {
     display: none
 }

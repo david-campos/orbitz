@@ -14,109 +14,127 @@
 <div class="container">
     <h1>ORBITZ</h1>
     <!-- Modos de juego -->
-    <div class="row center" id="modos">
-        <div class="col-md-4 mb-3">
-            <div class="card text-white bg-primary">
-                <div class="card-header"><h4 class="card-title">Classic</h4></div>
-                <div class="card-body">
+    <div id="modos">
+        <div class="row center">
+            <div class="col-md-4 mb-3">
+                <div class="card text-white bg-primary">
+                    <div class="card-header"><h4 class="card-title">Classic</h4></div>
+                    <div class="card-body">
 
-                    <p class="card-text">
-                        Destroy all your enemies!
-                    </p>
+                        <p class="card-text">
+                            Destroy all your enemies!
+                        </p>
 
-                    <a class="btn btn-outline-primary btn-lg btn-block btn_start" id="start_classic">Start</a>
+                        <a class="btn btn-outline-primary btn-lg btn-block btn_start" id="start_classic">Start</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card text-white bg-primary">
+                    <div class="card-header"><h4 class="card-title">Instinct</h4></div>
+                    <div class="card-body">
+
+                        <p class="card-text">
+                            Will you be the last standing?
+                        </p>
+                        <a class="btn btn-outline-primary btn-lg btn-block btn_start" id="start_instint">Start</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card text-white bg-primary">
+                    <div class="card-header"><h4 class="card-title">Center</h4></div>
+                    <div class="card-body">
+
+                        <p class="card-text">Own the center!</p>
+
+                        <a class="btn btn-outline-primary btn-lg btn-block btn_start" id="start_center">Start</a>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4 mb-3">
-            <div class="card text-white bg-primary">
-                <div class="card-header"><h4 class="card-title">Instinct</h4></div>
-                <div class="card-body">
 
-                    <p class="card-text">
-                        Will you be the last standing?
-                    </p>
-                    <a class="btn btn-outline-primary btn-lg btn-block btn_start" id="start_instint">Start</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="card text-white bg-primary">
-                <div class="card-header"><h4 class="card-title">Center</h4></div>
-                <div class="card-body">
-
-                    <p class="card-text">Own the center!</p>
-
-                    <a class="btn btn-outline-primary btn-lg btn-block btn_start" id="start_center">Start</a>
-                </div>
-            </div>
-        </div>
-
-
+        <a class="btn btn-primary text-white mt-3" id="goCredits">Credits</a>
     </div>
 
     <!-- Interfaz -->
-    <div class="card text-white bg-primary" style="display: none" id="interfaz">
-        <div class="card-header"><h4 class="card-title">Game options</h4></div>
-        <div class="card-body card-text">
-            <div class="row">
-                <!-- Players -->
-                <div class="col-md-6">
-                    <h5 class="mb-3">Players</h5>
-                    <div id="player_1">
-                        <p>
-                            <svg width="20" height="20">
-                                <rect width="20" height="20" style="fill:#000099;" rx="2" ry="2"></rect>
-                            </svg>&nbsp;&nbsp;&nbsp;
+    <div id="interfaz" style="display: none">
+        <div class="card text-white bg-primary">
+            <div class="card-header"><h4 class="card-title">Game options</h4></div>
+            <div class="card-body card-text">
+                <div class="row">
+                    <!-- Players -->
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Players</h5>
+                        <div id="player_1">
+                            <p>
+                                <svg width="20" height="20">
+                                    <rect width="20" height="20" style="fill:#000099;" rx="2" ry="2"></rect>
+                                </svg>&nbsp;&nbsp;&nbsp;
 
-                            Space key
+                                Space key
+                            </p>
+                        </div>
+                        <div id="player_2">
+                            <p>
+                                <svg width="20" height="20">
+                                    <rect width="20" height="20" style="fill:#990000;" rx="2" ry="2"></rect>
+                                </svg>&nbsp;&nbsp;&nbsp;
+
+                                Enter key
+                            </p>
+                        </div>
+                        <div id="player_3" style="opacity:0">
+                            <p>
+                                <svg width="20" height="20">
+                                    <rect width="20" height="20" style="fill:#009900;" rx="2" ry="2"></rect>
+                                </svg>&nbsp;&nbsp;&nbsp;
+
+                                Q key
+                            </p>
+                        </div>
+                        <div id="player_4" style="opacity:0">
+                            <p>
+                                <svg width="20" height="20">
+                                    <rect width="20" height="20" style="fill:#999900;" rx="2" ry="2"></rect>
+                                </svg>&nbsp;&nbsp;&nbsp;
+
+                                Dot key (.)
+                            </p>
+                        </div>
+
+                        <a class="btn btn-outline-primary" id="addPlayer">Add player</a>
+                        <a class="btn btn-outline-primary disabled" id="removePlayer">Remove player</a>
+                    </div>
+                    <!-- Opciones -->
+                    <div class="col-md-6">
+                        <h5 class="mb-3 mt-4">Options</h5>
+                        <p>
+                            <a class="btn btn-outline-primary active" id="blackholes">Black holes</a>
+                            <a class="btn btn-outline-primary" id="harmless">Harmless</a>
+                        </p>
+                        <p>
+                            <a class="btn btn-outline-primary" id="time" data-time="0">Infinite time</a>
                         </p>
                     </div>
-                    <div id="player_2">
-                        <p>
-                            <svg width="20" height="20">
-                                <rect width="20" height="20" style="fill:#990000;" rx="2" ry="2"></rect>
-                            </svg>&nbsp;&nbsp;&nbsp;
-
-                            Enter key
-                        </p>
-                    </div>
-                    <div id="player_3" style="opacity:0">
-                        <p>
-                            <svg width="20" height="20">
-                                <rect width="20" height="20" style="fill:#009900;" rx="2" ry="2"></rect>
-                            </svg>&nbsp;&nbsp;&nbsp;
-
-                            Q key
-                        </p>
-                    </div>
-                    <div id="player_4" style="opacity:0">
-                        <p>
-                            <svg width="20" height="20">
-                                <rect width="20" height="20" style="fill:#999900;" rx="2" ry="2"></rect>
-                            </svg>&nbsp;&nbsp;&nbsp;
-
-                            Dot key (.)
-                        </p>
-                    </div>
-
-                    <a class="btn btn-outline-primary" id="addPlayer">Add player</a>
-                    <a class="btn btn-outline-primary disabled" id="removePlayer">Remove player</a>
                 </div>
-                <!-- Opciones -->
-                <div class="col-md-6">
-                    <h5 class="mb-3 mt-4">Options</h5>
-                    <p>
-                        <a class="btn btn-outline-primary active" id="blackholes">Black holes</a>
-                        <a class="btn btn-outline-primary" id="harmless">Harmless</a>
-                    </p>
-                    <p>
-                        <a class="btn btn-outline-primary" id="time" data-time="0">Infinite time</a>
-                    </p>
-                </div>
+                <a class="btn btn-primary btn-block btn-lg mt-3" id="initGame">Start game!</a>
             </div>
-            <a class="btn btn-outline-primary btn-block btn-lg mt-3" id="initGame">Start game!</a>
         </div>
+
+        <a class="btn btn-primary text-white mt-3 goBack">Go back</a>
+    </div>
+
+    <!-- Creditos -->
+    <div id="creditos" style="display: none">
+        <div class="card text-white bg-primary">
+            <div class="card-header"><h4 class="card-title">Credits</h4></div>
+            <div class="card-body card-text">
+                <p>Please insert credits here</p>
+            </div>
+        </div>
+
+        <a class="btn btn-primary text-white mt-3 goBack">Go back</a>
     </div>
 </div>
 
