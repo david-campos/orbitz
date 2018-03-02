@@ -47,7 +47,7 @@ var juego = null;
 
 function globf_esModo(modo) {
     for(var m in MODOS) {
-        if(MODOS.hasOwnProperty(m) && m === modo) {
+        if(MODOS.hasOwnProperty(m) && MODOS[m] === modo) {
             return true;
         }
     }

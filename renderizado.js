@@ -1,4 +1,18 @@
 var imgAgujero = new Image();
+var iconos_asteroides = {
+    invencible: new Image(),
+    invisible: new Image(),
+    fortuna: new Image(),
+    gravedad: new Image(),
+    salvador: new Image(),
+    transporte: new Image()
+};
+for(var imagen in iconos_asteroides) {
+    iconos_asteroides[imagen].ready = false;
+    iconos_asteroides[imagen].onload = function () {
+        this.ready = true;
+    };
+}
 var transposicionY = 0;
 var prerenderizados = {};
 var puntosDebug = [];
@@ -21,25 +35,52 @@ function dibujarAsteroide(ctx) {
 }
 
 /**
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {Image} icono
+ * @param {String} color
+ */
+function colorearIcono(ctx, icono, color) {
+    ctx.fillStyle = color;
+    ctx.rect(0, 0, 215, 215);
+    ctx.fill();
+    ctx.globalCompositeOperation = "destination-atop";
+    ctx.drawImage(icono, 0, 0, 215, 215);
+}
+
+/**
  * Pre-renderiza con una funcion de dibujo sobre un nuevo canvas y lo devuelve
  * @param {int} width ancho del canvas
  * @param {int} height alto del canvas
- * @param {function(CanvasRenderingContext2D)} funcionDibujo función para dibujar el elemento
+ * @param {function(CanvasRenderingContext2D, [Object],[Object])} funcionDibujo función para dibujar el elemento
+ * @param param1 parametro opcional 1
+ * @param param2 parametro opcional 2
  * @returns {HTMLCanvasElement}
  */
-function preRenderizar(width, height, funcionDibujo) {
+function preRenderizar(width, height, funcionDibujo, param1, param2) {
     var canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = height;
     var canvasCtx = canvas.getContext('2d');
-    funcionDibujo(canvasCtx);
+    funcionDibujo(canvasCtx, param1, param2);
     return canvas;
 }
 
-function generarPreRenderizados() {
+function generarPreRenderizados(juego) {
     prerenderizados = {
-        asteroide: preRenderizar(10, 10, dibujarAsteroide)
+        asteroide: preRenderizar(10, 10, dibujarAsteroide),
+        paletaIconos: []
     };
+    for(var i in juego.jugadores) {
+        var color = juego.jugadores[i].color;
+        prerenderizados.paletaIconos[i] = {
+            invencible: preRenderizar(215, 215, colorearIcono, iconos_asteroides.invencible, color),
+            invisible: preRenderizar(215, 215, colorearIcono, iconos_asteroides.invisible, color),
+            fortuna: preRenderizar(215, 215, colorearIcono, iconos_asteroides.fortuna, color),
+            gravedad: preRenderizar(215, 215, colorearIcono, iconos_asteroides.gravedad, color),
+            salvador: preRenderizar(215, 215, colorearIcono, iconos_asteroides.salvador, color),
+            transporte: preRenderizar(215, 215, colorearIcono, iconos_asteroides.transporte, color)
+        };
+    }
 }
 
 /**
@@ -165,7 +206,28 @@ var render = function(juego) {
         ctx.closePath();
     }
 
+    //Reloj
+    if(juego.modo !== MODOS.CLASICO && juego.duracion > 0) {
+        // Math.round(jugadores[i].ultimaMuerte/60000) mins
+        var restante =  Math.round(juego.duracion*30 - (Date.now() - juego.inicioPartida)/2000);
+
+        if(restante < 0 || restante > 9) return;
+
+        var rojo = juego.duracion*60000 - (Date.now() - juego.inicioPartida); //Restante en milisegundos
+        rojo = rojo%2000; //Cíclico cada 2 segundos
+        rojo = (Math.sin(rojo/1000*Math.PI+Math.PI/4)+1)/2;
+        for(i=1;i<=restante;i++) {
+            ctx.beginPath();
+            ctx.rect(MAP.w / 2 - 200 + i*4 + (i-1)*19, MAP.h - 40, 19, 36);
+            ctx.fillStyle = "rgba(200,0,0,"+rojo+")";
+            ctx.fill();
+            ctx.closePath();
+        }
+    }
+
 	ctx.restore();
+
+	// A PARTIR DE AQUÍ NO HAY TRANSPOSICIÓN (SÍ ESCALADO)
 
 	// Debug mode
 	if(glob_debugMode) {
@@ -191,6 +253,8 @@ var render = function(juego) {
         ctx.restore();
     }
 
+    dibujarInterfazAsteroides(juego);
+
 	//Notas
     ctx.save();
     var notasSize = 20;
@@ -211,25 +275,6 @@ var render = function(juego) {
 		ctx.fillText(Log.notas[i].mensaje, 20, 40 + i * notasSize * 1.2);
 	}
 	ctx.restore();
-	
-	//Reloj
-	if(juego.modo !== MODOS.CLASICO && juego.duracion > 0) {
-		// Math.round(jugadores[i].ultimaMuerte/60000) mins
-		var restante =  Math.round(juego.duracion*30 - (Date.now() - juego.inicioPartida)/2000);
-               
-		if(restante < 0 || restante > 9) return;
-        
-        var rojo = juego.duracion*60000 - (Date.now() - juego.inicioPartida); //Restante en milisegundos
-        rojo = rojo%2000; //Cíclico cada 2 segundos
-        rojo = (Math.sin(rojo/1000*Math.PI+Math.PI/4)+1)/2;
-        for(i=1;i<=restante;i++) {
-		    ctx.beginPath();
-		    ctx.rect(MAP.w / 2 - 50 + i*2 + (i-1)*9, MAP.h - 28, 9, 18);
-		    ctx.fillStyle = "rgba(200,0,0,"+rojo+")";
-		    ctx.fill();
-		    ctx.closePath();
-        }
-	}
 };
 
 function dibujarPlaneta(juego, p) {
@@ -322,4 +367,60 @@ function redimensionar(width, height) {
 
 function debugPunto(x, y, color) {
     puntosDebug.push({x:x, y:y, color: color});
+}
+
+/**
+ * @param {Game} juego
+ */
+function dibujarInterfazAsteroides(juego) {
+    var asteroides = [];
+    for(var i in juego.jugadores) {
+        asteroides[i] = {};
+    }
+    for(i in juego.bolas) {
+        var bola = juego.bolas[i];
+        if(bola.jugador) {
+            var jg = asteroides[juego.jugadores.indexOf(juego.bolas[i].jugador)];
+            jg.invencible = jg.invencible || bola.invencible;
+            jg.invisible = jg.invisible || bola.invisible;
+            jg.fortuna = jg.fortuna || bola.fortuna;
+            jg.gravedad = jg.gravedad || bola.gravedad;
+            jg.salvador = jg.salvador || bola.salvado;
+            jg.transporte = jg.transporte || bola.transportado;
+        }
+    }
+    var iconos = [];
+    for(i in asteroides) {
+        var jugador = asteroides[i];
+        if(jugador.invencible)
+            iconos.push(prerenderizados.paletaIconos[i].invencible);
+        if(jugador.invisible)
+            iconos.push(prerenderizados.paletaIconos[i].invisible);
+        if(jugador.fortuna)
+            iconos.push(prerenderizados.paletaIconos[i].fortuna);
+        if(jugador.gravedad)
+            iconos.push(prerenderizados.paletaIconos[i].gravedad);
+        if(jugador.transporte)
+            iconos.push(prerenderizados.paletaIconos[i].transporte);
+        if(jugador.salvador)
+            iconos.push(prerenderizados.paletaIconos[i].salvador);
+    }
+    var espacio_ico = canvas.width / 24; // 6 habilidades x 4 jugadores = 24
+    var lado_ico = espacio_ico * 0.8;
+    var margen_ico = espacio_ico * 0.1;
+    var espacioOcupado = iconos.length * espacio_ico;
+    var margen_izq = (canvas.width - espacioOcupado)/2;
+    ctx.save();
+    ctx.shadowColor = "#471468";
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.shadowBlur = 10;
+    ctx.scale(1/glob_escala.w, 1/glob_escala.h);
+    ctx.translate(margen_izq, canvas.height - espacio_ico);
+    for(i in iconos) {
+        ctx.translate(margen_ico, 0);
+        ctx.drawImage(iconos[i], 0, 0, lado_ico, lado_ico);
+        ctx.translate(lado_ico + margen_ico, 0);
+    }
+    ctx.restore();
 }

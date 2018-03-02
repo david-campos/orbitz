@@ -66,7 +66,7 @@ function Game(jugadores, modo, maxPlanetas, bolasExtra, tiempo, maxAgujeros, agu
 Game.prototype.start = function() {
     this.generarMapa();
     this.generarBolas();
-    generarPreRenderizados();
+    generarPreRenderizados(juego);
     this.iniciado = true;
     this.finalizado = false;
     this.then = Date.now();
@@ -424,8 +424,9 @@ Game.prototype.finalizar = function(superviviente) {
             Log.nuevaNota("Ganador Jugador " + this.jugadores[mayor].id, this.jugadores[mayor]);
             break;
     }
+    var self = this;
     setTimeout(function() {
-        this.finalizado = true;
+        self.finalizado = true;
         reproducir(sonidos.claxon);
     }, 100);
 };

@@ -24,6 +24,9 @@ addEventListener("keydown", function (e) {
     } else if(e.keyCode === 76) {
 	    // L
         glob_debugMode = true;
+    } else if(e.keyCode === 116) {
+	    // F5
+        return true;
     }
 
 	if(!juego || (juego.finalizado || juego.pausado || !juego.iniciado)) return true;
