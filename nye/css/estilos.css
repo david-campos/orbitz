@@ -91,6 +91,20 @@ h1 {
     padding: 0;
 }
 
+#goCredits {
+    position: fixed;
+    left: 1rem;
+    bottom: 1rem;
+    color: white;
+    border-radius: 0.5rem;
+    height: 3rem;
+    text-align: center;
+    background-color: rgba(30, 18, 90, 0.95) !important;
+    border: 2px solid #EEE;
+    box-shadow: 0 0 10px #4b2d91, 0 0 10px #4b2d91;
+    padding: 0 1rem;
+}
+
 .btn-primary:hover {
     color: #fff;
     background-color: rgba(111, 66, 193, 0.5);

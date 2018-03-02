@@ -114,7 +114,6 @@ window.onload = function () {
     };
 
     mute.onclick = function(ev) {
-        console.log("hey");
         let state = mute.getAttribute('data-sound');
 
         state = 1 - state;
