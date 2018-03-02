@@ -19,7 +19,6 @@ html {
     }
 }
 
-
 .card {
     background-color: rgba(30, 18, 90, 0.8) !important;
     border: 2px solid #EEE;
@@ -34,8 +33,9 @@ svg {
 }
 
 .center {
-   text-align: center
+    text-align: center
 }
+
 .card-text {
     font-size: 1.3em
 }
@@ -52,6 +52,7 @@ svg {
     font-weight: 500;
     letter-spacing: 1px;
 }
+
 h1, h2, h3, h4 {
     font-family: orbitron, sans-serif;
 }
@@ -59,10 +60,11 @@ h1, h2, h3, h4 {
 h4.card-title {
     margin-bottom: 0
 }
+
 body {
     font-family: Raleway, arial, sans-serif;
     background: inherit;
-    margin: 15vh auto;
+    margin: 3em;
 }
 
 h1 {
@@ -70,6 +72,47 @@ h1 {
     font-weight: bolder;
     font-size: 101px;
     letter-spacing: 5px;
-    margin-bottom: 4rem;
+    margin-bottom: 0.5em;
     text-shadow: 0 0 10px #6f42c1, 0 0 10px #6f42c1;
+}
+
+#mute {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    font-size: 1.5rem;
+    border-radius: 100%;
+    width: 3rem;
+    height: 3rem;
+    text-align: center;
+    background-color: rgba(30, 18, 90, 0.95) !important;
+    border: 2px solid #EEE;
+    box-shadow: 0 0 10px #4b2d91, 0 0 10px #4b2d91;
+    padding: 0;
+}
+
+#sonido {
+    display: none
+}
+
+/* Pantallas medianas */
+@media (max-width: 767px) {
+    h1 {
+        font-size: 70px
+    }
+}
+
+/* Pantallas enanas */
+@media (max-width: 575px) {
+    h1 {
+        font-size: 2.5rem
+    }
+
+    h4 {
+        font-size: 1.5rem
+    }
+
+    body {
+        margin: 1em
+    }
 }

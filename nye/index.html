@@ -15,7 +15,7 @@
     <h1>ORBITZ</h1>
     <!-- Modos de juego -->
     <div class="row center" id="modos">
-        <div class="col-md-4">
+        <div class="col-md-4 mb-3">
             <div class="card text-white bg-primary">
                 <div class="card-header"><h4 class="card-title">Classic</h4></div>
                 <div class="card-body">
@@ -28,7 +28,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 mb-3">
             <div class="card text-white bg-primary">
                 <div class="card-header"><h4 class="card-title">Instinct</h4></div>
                 <div class="card-body">
@@ -40,7 +40,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 mb-3">
             <div class="card text-white bg-primary">
                 <div class="card-header"><h4 class="card-title">Center</h4></div>
                 <div class="card-body">
@@ -120,7 +120,9 @@
     </div>
 </div>
 
-<audio src="../snd/curves_julien_menu.mp3" autoplay loop style="display: none"></audio>
+<button id="mute" data-sound="1">🔊</button>
+
+<audio src="../snd/curves_julien_menu.mp3" id="sonido" autoplay loop></audio>
 <script src="menu.js"></script>
 
 </body>

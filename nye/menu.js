@@ -6,6 +6,8 @@ window.onload = function () {
     const harmless = document.getElementById('harmless');
     const initGame = document.getElementById('initGame');
     const time = document.getElementById('time');
+    const mute = document.getElementById('mute');
+    const sonido = document.getElementById('sonido');
 
     // Al hacer click en los botones iniciales, pasar a la siguiente pantalla
     const botones = document.getElementsByClassName('btn_start');
@@ -88,5 +90,21 @@ window.onload = function () {
         time.setAttribute('data-time', state);
 
         time.innerHTML = textsTime[state];
+    };
+
+    mute.onclick = function(ev) {
+        console.log("hey");
+        let state = mute.getAttribute('data-sound');
+
+        state = 1 - state;
+        mute.setAttribute('data-sound', state);
+
+        if (state === 1) {
+            mute.innerHTML = "🔊";
+            sonido.muted = false;
+        } else {
+            mute.innerHTML = "🔈";
+            sonido.muted = true;
+        }
     }
 };
