@@ -7,7 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="css/cyborg.css">
     <link rel="stylesheet" href="css/estilos.css">
-    <link href="https://fonts.googleapis.com/css?family=Orbitron:400,500,900|Raleway:400,600" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css?family=Orbitron:400,500,900|Raleway:400,600" rel="stylesheet"> -->
+    <link rel="stylesheet" href="css/fonts.css">
 </head>
 <body>
 <div class="container">
@@ -15,7 +16,7 @@
     <!-- Modos de juego -->
     <div class="row center" id="modos">
         <div class="col-md-4">
-            <div class="card text-white bg-primary mb-3">
+            <div class="card text-white bg-primary">
                 <div class="card-header"><h4 class="card-title">Classic</h4></div>
                 <div class="card-body">
 
@@ -28,7 +29,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card text-white bg-primary mb-3">
+            <div class="card text-white bg-primary">
                 <div class="card-header"><h4 class="card-title">Instinct</h4></div>
                 <div class="card-body">
 
@@ -40,7 +41,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card text-white bg-primary mb-3">
+            <div class="card text-white bg-primary">
                 <div class="card-header"><h4 class="card-title">Center</h4></div>
                 <div class="card-body">
 
@@ -55,155 +56,72 @@
     </div>
 
     <!-- Interfaz -->
-    <div class="card text-white bg-primary mb-3" style="display: none" id="interfaz">
+    <div class="card text-white bg-primary" style="display: none" id="interfaz">
         <div class="card-header"><h4 class="card-title">Game options</h4></div>
         <div class="card-body card-text">
-
             <div class="row">
-                <div class="col-md-3 col-sm-6" id="player_1">
-                    <p>
-                        <svg width="20" height="20">
-                            <rect width="20" height="20" style="fill:#000099;" rx="2" ry="2"></rect>
-                        </svg>&nbsp;&nbsp;&nbsp;
+                <!-- Players -->
+                <div class="col-md-6">
+                    <h5 class="mb-3">Players</h5>
+                    <div id="player_1">
+                        <p>
+                            <svg width="20" height="20">
+                                <rect width="20" height="20" style="fill:#000099;" rx="2" ry="2"></rect>
+                            </svg>&nbsp;&nbsp;&nbsp;
 
-                        Space key
-                    </p>
+                            Space key
+                        </p>
+                    </div>
+                    <div id="player_2">
+                        <p>
+                            <svg width="20" height="20">
+                                <rect width="20" height="20" style="fill:#990000;" rx="2" ry="2"></rect>
+                            </svg>&nbsp;&nbsp;&nbsp;
+
+                            Enter key
+                        </p>
+                    </div>
+                    <div id="player_3" style="opacity:0">
+                        <p>
+                            <svg width="20" height="20">
+                                <rect width="20" height="20" style="fill:#009900;" rx="2" ry="2"></rect>
+                            </svg>&nbsp;&nbsp;&nbsp;
+
+                            Q key
+                        </p>
+                    </div>
+                    <div id="player_4" style="opacity:0">
+                        <p>
+                            <svg width="20" height="20">
+                                <rect width="20" height="20" style="fill:#999900;" rx="2" ry="2"></rect>
+                            </svg>&nbsp;&nbsp;&nbsp;
+
+                            Dot key (.)
+                        </p>
+                    </div>
+
+                    <a class="btn btn-outline-primary" id="addPlayer">Add player</a>
+                    <a class="btn btn-outline-primary disabled" id="removePlayer">Remove player</a>
                 </div>
-                <div class="col-md-3 col-sm-6" id="player_2">
+                <!-- Opciones -->
+                <div class="col-md-6">
+                    <h5 class="mb-3 mt-4">Options</h5>
                     <p>
-                        <svg width="20" height="20">
-                            <rect width="20" height="20" style="fill:#990000;" rx="2" ry="2"></rect>
-                        </svg>&nbsp;&nbsp;&nbsp;
-
-                        Enter key
+                        <a class="btn btn-outline-primary active" id="blackholes">Black holes</a>
+                        <a class="btn btn-outline-primary" id="harmless">Harmless</a>
                     </p>
-                </div>
-                <div class="col-md-3 col-sm-6" id="player_3" style="opacity:0">
                     <p>
-                        <svg width="20" height="20">
-                            <rect width="20" height="20" style="fill:#009900;" rx="2" ry="2"></rect>
-                        </svg>&nbsp;&nbsp;&nbsp;
-
-                        Q key
-                    </p>
-                </div>
-                <div class="col-md-3 col-sm-6" id="player_4" style="opacity:0">
-                    <p>
-                        <svg width="20" height="20">
-                            <rect width="20" height="20" style="fill:#999900;" rx="2" ry="2"></rect>
-                        </svg>&nbsp;&nbsp;&nbsp;
-
-                        Dot key (.)
+                        <a class="btn btn-outline-primary" id="time" data-time="0">Infinite time</a>
                     </p>
                 </div>
             </div>
-
-            <a class="btn btn-outline-primary" id="addPlayer">Add player</a>
-            <a class="btn btn-outline-primary disabled" id="removePlayer">Remove player</a>
-
-            <form action="">
-
-                <br>
-
-                <label>
-                    <a class="btn btn-outline-primary active" id="blackholes">Black holes</a>
-                </label>
-                <label id="harmlessLabel">&nbsp;&gt;&gt;
-                    <a class="btn btn-outline-primary" id="harmless">Harmless</a>
-                </label>
-                <br>
-                <a class="btn btn-outline-primary btn-block btn-lg" id="initGame">Start game!</a>
-            </form>
-
+            <a class="btn btn-outline-primary btn-block btn-lg mt-3" id="initGame">Start game!</a>
         </div>
     </div>
 </div>
 
 <audio src="../snd/curves_julien_menu.mp3" autoplay loop style="display: none"></audio>
-<script>
-    // Iniciar partida
-    const addPlayer = document.getElementById('addPlayer');
-    const removePlayer = document.getElementById('removePlayer');
-    const blackholes = document.getElementById('blackholes');
-    const harmlessLabel = document.getElementById('harmlessLabel');
-    const harmless = document.getElementById('harmless');
-    const initGame = document.getElementById('initGame');
-
-    // Al hacer click en los botones iniciales, pasar a la siguiente pantalla
-    const botones = document.getElementsByClassName('btn_start');
-    Array.prototype.filter.call(botones, function (value) {
-        value.onclick = function (ev) {
-            document.getElementById('modos').style.display = 'none';
-            document.getElementById('interfaz').style.display = 'block';
-        }
-    });
-
-    // Añadir Jugador
-    let jugadoresN = 2;
-    addPlayer.onclick = function (ev) {
-        if (jugadoresN < 4) {
-            ++jugadoresN;
-        }
-        actualizar();
-    };
-
-    removePlayer.onclick = function (ev) {
-        if (jugadoresN > 2) {
-            --jugadoresN;
-        }
-        actualizar();
-    };
-    
-    function actualizar() {
-        if (jugadoresN === 4) {
-            addPlayer.classList.add("disabled");
-        } else {
-            addPlayer.classList.remove("disabled");
-        }
-
-        if (jugadoresN === 2) {
-            removePlayer.classList.add("disabled");
-        } else {
-            removePlayer.classList.remove("disabled");
-        }
-        for (let i = 1; i <= 4; ++i) {
-            let mostrar = i <= jugadoresN;
-            document.getElementById('player_' + i).style.opacity = (mostrar ? "1" : "0");
-        }
-    }
-
-    blackholes.onchange = function(ev) {
-        harmlessLabel.style.display = (this.checked ? 'inline-block' : 'none');
-    };
-
-    initGame.onclick = function() {
-        alert("empiesa no mas");
-    };
-
-    let toggle = function(ev) {
-        if (ev.classList.contains("active")) {
-            ev.classList.remove("active");
-        } else {
-            ev.classList.add("active");
-        }
-    };
-
-    blackholes.onclick = function(ev) {
-        toggle(this);
-        if (this.classList.contains("active")) {
-            harmlessLabel.style.display = "inline-block";
-        } else {
-            harmlessLabel.style.display = "none";
-        }
-    };
-
-    harmless.onclick = function(ev) {
-        toggle(this);
-    }
-
-
-
-</script>
+<script src="menu.js"></script>
 
 </body>
 </html>
