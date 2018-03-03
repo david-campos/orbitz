@@ -124,11 +124,13 @@ h1 {
     box-shadow: 0 0 10px #4b2d91, 0 0 10px #4b2d91;
     padding: 0 1rem;
     cursor: pointer;
+    display: flex;
+    align-items: center;
 }
 a {
     color: #9942fb;
 }
-.btn-primary:hover,#mut:hover,#goCredits:hover {
+.btn-primary:hover,#mut:hover,#goCredits:hover,.btn-outline-primary:hover {
     color: #fff;
     background-color: rgba(111, 66, 193, 0.5) !important;
     border-color: rgb(30, 18, 90);
