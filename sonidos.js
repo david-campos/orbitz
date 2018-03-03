@@ -25,6 +25,7 @@ sonidos.cambiarFondo = function() {
     sonidos.fondo = fondos[Math.floor(Math.random() * fondos.length)];
     sonidos.fondo.currentTime = 0;
 };
+sonidos.cambiarFondo();
 sonidos.fondo.volume = 0.3;
 sonidos.fondo.loop = true;
 
