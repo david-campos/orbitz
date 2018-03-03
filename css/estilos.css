@@ -18,9 +18,17 @@ div#juego, img#bkgrd, canvas#mainframe, div#overscreen {
 }
 
 /* Fondo, frame de juego, overscreen */
-img#bkgrd { z-index: 100; }
-canvas#mainframe { z-index: 101; }
-div#overscreen { z-index: 102; }
+img#bkgrd {
+    z-index: 100;
+}
+
+canvas#mainframe {
+    z-index: 101;
+}
+
+div#overscreen {
+    z-index: 102;
+}
 
 /* The animation code */
 @keyframes backgroundAnim {
@@ -127,10 +135,12 @@ h1 {
     display: flex;
     align-items: center;
 }
+
 a {
     color: #9942fb;
 }
-.btn-primary:hover,#mut:hover,#goCredits:hover,.btn-outline-primary:hover {
+
+.btn-primary:hover, #mut:hover, #goCredits:hover, .btn-outline-primary:hover {
     color: #fff;
     background-color: rgba(111, 66, 193, 0.5) !important;
     border-color: rgb(30, 18, 90);
@@ -138,6 +148,12 @@ a {
 
 #sonido {
     display: none
+}
+
+.key {
+    border-bottom: 2px solid #EEEEEE;
+    margin-right: 1em;
+    padding-bottom: 2px;
 }
 
 /* Pantallas medianas */
