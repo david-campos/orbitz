@@ -28,16 +28,3 @@ function signo(n) {
 function moduloVector(x, y) {
 	return Math.sqrt( x*x + y*y );
 }
-
-/**
- *
- * @param mensaje
- * @param {Jugador} [jugador]
- */
-function Nota(mensaje, jugador) {
-	var miNota = {};
-	miNota.mensaje = mensaje;
-	miNota.t = Date.now() + 5000;
-	miNota.color = jugador?jugador.color:"gray";
-	notas.push(miNota);
-}

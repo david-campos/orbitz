@@ -18,18 +18,18 @@ Jugador.prototype.asignarBola = function() {
 /**
  * @type {[[String, Number]]}
  */
-var ast_tipos = [["Invencible", 2],
-    ["Speed ^^", 3],
-    ["Speed v", 4],
-    ["Fuera de la órbita!", 5],
+var ast_tipos = [["Invincible", 2],
+    ["Speed up x 2", 3],
+    ["Speed down", 4],
+    ["Out of the orbit!", 5],
     ["Invisible", 6],
-    ["Asteroide inútil", 7],
-    ["Rebote!", 5],
-    ["Afortunado", 3],
-    ["Gravedad propia", 3],
-    ["Speed ^", 6],
-    ["Salvavidas", 7],
-    ["Transporte", 6]];
+    ["Useless asteroid", 7],
+    ["Rebound!", 5],
+    ["Lucky", 3],
+    ["Own gravity", 3],
+    ["Speed up", 6],
+    ["Lifesaver", 7],
+    ["Transport", 6]];
 var ast_prob_t = 0;
 for (var i in ast_tipos) {
     var p = ast_tipos[i][1];

@@ -45,12 +45,14 @@ function initMenu() {
             modos.style.display = 'block';
             interfaz.style.display = 'none';
             creditos.style.display = 'none';
+            goCredits.style.display = 'inline-block';
         }
     });
 
     goCredits.onclick = function () {
         modos.style.display = 'none';
         interfaz.style.display = 'none';
+        goCredits.style.display = 'none';
         creditos.style.display = 'block';
     };
 

@@ -13,6 +13,8 @@ sonidos.muerte = new Audio('snd/muerte.ogg');
 sonidos.muerte.volume = 0.9;
 sonidos.cinta = new Audio('snd/cinta.ogg');
 sonidos.cinta.volume = 0.8;
+sonidos.golpe = new Audio('snd/golpe.ogg');
+sonidos.golpe.volume = 0.8;
 
 var fondos = [
     'snd/Jay_Krewel_Break_The_Rules.mp3',

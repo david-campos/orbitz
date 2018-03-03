@@ -1,5 +1,5 @@
 // CONFIG
-const MODOS = {CLASICO: "Clásico", INSTINTO: "Instinto", CENTRO: "Centro"}; // Nombres de los modos de juego
+const MODOS = {CLASICO: "Classic", INSTINTO: "Instinct", CENTRO: "Center"}; // Nombres de los modos de juego
 /** @type {number} Radio de las bolas de juego*/
 const RADIO_BOLAS = 10;
 /** @type {number} Radio mínimo de los planetas generados */

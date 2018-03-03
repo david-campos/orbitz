@@ -84,7 +84,7 @@ Game.prototype.mainLoop = function() {
 
     if(delta === 0) {
         delta = 1;
-        console.log("Fallo en la medición de tiempos.\n");
+        console.log("delta=0\n");
     } else {
         glob_fps = Math.round(0.6 *glob_fps + 400/delta);
         glob_fps_min = (glob_fps<glob_fps_min?glob_fps:glob_fps_min);
@@ -183,14 +183,14 @@ Game.prototype.bolaColisionBordes = function(bola, elapsedSeconds) {
         bola.x += bola.v.x * elapsedSeconds; // Previene que se atasque allí
         bola.planetaAnt = null; // Ya no cuenta el planeta anterior (puede volver a él)
         reproducir(sonidos.pong2);
-        bola.damage(this, "Fuera del campo.");
+        bola.damage(this, "Dead (out of bounds)");
     }
     if(bola.y < 0 || bola.y > MAP.h) {
         bola.v.y *= -1;
         bola.y += bola.v.y * elapsedSeconds; // Previene el atasco ahí
         bola.planetaAnt = null; // Ya no cuenta el planeta anterior (puede volver a él)
         reproducir(sonidos.pong2);
-        bola.damage(this, "Fuera del campo.");
+        bola.damage(this, "Dead (out of bounds)");
     }
 };
 
@@ -309,7 +309,7 @@ Game.prototype.bolaLibreUpdate = function(bola, elapsedSeconds) {
                         bola.planetaAnt = null; // Ya no cuenta el planeta anterior (puede volver a él)
                     } else {
                         // Si no lo tiene, la matamos
-                        bola.damage(this, "Agujero negro.", true);
+                        bola.damage(this, "Dead (black hole)", true);
                         return; // Siguiente bola, esta c'est fini.
                     }
                 } else {
@@ -390,7 +390,7 @@ Game.prototype.finalizar = function(superviviente) {
     Log.clear();
     switch(this.modo) {
         case MODOS.CLASICO:
-            Log.nuevaNota("Ganador Jugador " + superviviente.id, superviviente);
+            Log.nuevaNota("Winner: Player " + superviviente.id, superviviente);
             break;
         case MODOS.INSTINTO:
             var menor = 0;
@@ -404,8 +404,8 @@ Game.prototype.finalizar = function(superviviente) {
                 if(mils < 10) mils = "00"+mils.toString();
 
                 Log.nuevaNota(
-                    "Jugador " + (jug.id) + ": " +
-                    jug.muertes + " muertes. Última ("+mins+"' "+secs+"\" "+mils+")", jug);
+                    "Player " + (jug.id) + ": " +
+                    jug.muertes + " deaths. Last one ("+mins+"' "+secs+"\" "+mils+")", jug);
                 if(empate && jug.muertes !== 0)
                     empate = false;
                 if(jug.muertes < this.jugadores[menor].muertes ||
@@ -414,23 +414,23 @@ Game.prototype.finalizar = function(superviviente) {
                     menor = i;
             }
             if(!empate)
-                Log.nuevaNota("Ganador Jugador " + this.jugadores[menor].id, this.jugadores[menor]);
+                Log.nuevaNota("Winner: Player " + this.jugadores[menor].id, this.jugadores[menor]);
             else
-                Log.nuevaNota("Empate");
+                Log.nuevaNota("Draw!");
             break;
         case 2:
             var mayor = 0;
             for(i=0; i < this.jugadores.length; i++) {
                 jug = this.jugadores[i];
-                var nota = "Jugador " + (jug.id) + ": " + Math.round(jug.tiempo*100)/100 + " segundos.";
+                var nota = "Player " + (jug.id) + ": " + Math.round(jug.tiempo*100)/100 + " seconds.";
                 if(jug.ultimo)
-                    nota += " (Ultimo)";
+                    nota += " (Last one)";
                 Log.nuevaNota(nota, this.jugadores[i]);
                 if(jug.tiempo > this.jugadores[mayor].tiempo ||
                     (jug.tiempo === this.jugadores[mayor].tiempo && jug.ultimo ))
                     mayor = i;
             }
-            Log.nuevaNota("Ganador Jugador " + this.jugadores[mayor].id, this.jugadores[mayor]);
+            Log.nuevaNota("Winner: Player " + this.jugadores[mayor].id, this.jugadores[mayor]);
             break;
     }
     var self = this;

@@ -102,6 +102,7 @@ h1 {
     border: 2px solid #EEE;
     box-shadow: 0 0 10px #4b2d91, 0 0 10px #4b2d91;
     padding: 0;
+    cursor: pointer;
 }
 
 #goCredits {
@@ -116,11 +117,14 @@ h1 {
     border: 2px solid #EEE;
     box-shadow: 0 0 10px #4b2d91, 0 0 10px #4b2d91;
     padding: 0 1rem;
+    cursor: pointer;
 }
-
-.btn-primary:hover {
+a {
+    color: #9942fb;
+}
+.btn-primary:hover,#mut:hover,#goCredits:hover {
     color: #fff;
-    background-color: rgba(111, 66, 193, 0.5);
+    background-color: rgba(111, 66, 193, 0.5) !important;
     border-color: rgb(30, 18, 90);
 }
 

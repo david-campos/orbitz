@@ -80,9 +80,9 @@ Bola.prototype.damage = function (juego, mensajeEnCasoDeMuerte, mortal) {
     // Continuar viviendo?
     if (!mortal && this.vidas > 0) {
         if (this.jugador)
-            Log.nuevaNota(this.vidas + " vidas restantes", this.jugador);
+            Log.nuevaNota(this.vidas + " li"+(this.vidas>1?"ves":"fe")+" left", this.jugador);
         else
-            Log.nuevaNota(this.vidas + " vidas restantes");
+            Log.nuevaNota(this.vidas + " li"+(this.vidas>1?"ves":"fe")+" left");
         this.planetaAnt = null;
         return;
     }

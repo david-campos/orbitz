@@ -5,10 +5,6 @@ var fullScreen = false;
 addEventListener("keydown", function (e) {
 	keysDown[e.keyCode] = true;
 	
-	/*if(e.keyCode == 80) {
-		if(!sonidos.fondo.paused) sonidos.fondo.pause();
-		else sonidos.fondo.play();
-	}*/
 	if(e.keyCode === 70) {
 	    // Tecla F = fullscreen
         if(!fullScreen) {
@@ -23,7 +19,7 @@ addEventListener("keydown", function (e) {
 	    if(fullScreen) exitFullscreen();
     } else if(e.keyCode === 76) {
 	    // L
-        glob_debugMode = true;
+        glob_debugMode = !glob_debugMode;
     } else if(e.keyCode === 116) {
 	    // F5
         return true;

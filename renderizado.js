@@ -229,6 +229,24 @@ var render = function(juego) {
 
 	// A PARTIR DE AQUÍ NO HAY TRANSPOSICIÓN (SÍ ESCALADO)
 
+    // Modo de juego
+    ctx.save();
+    ctx.font="bold 20px Orbitron";
+    ctx.shadowColor = "#471468";
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.shadowBlur = 10;
+
+    // Create gradient
+    var gradient=ctx.createLinearGradient(0,0,200,0);
+    gradient.addColorStop(0.25,"gray");
+    gradient.addColorStop(0.75,"white");
+    // Fill with gradient
+    ctx.fillStyle=gradient;
+    var w = ctx.measureText(juego.modo).width;
+    ctx.fillText(juego.modo, MAP.w - w - 20, 40);
+    ctx.restore();
+
 	// Debug mode
 	if(glob_debugMode) {
 	    var textos = [
@@ -246,7 +264,7 @@ var render = function(juego) {
             }
             var width = ctx.measureText(text).width;
             ctx.save();
-            ctx.fillText(text, MAP.w - width, 40);
+            ctx.fillText(text, MAP.w - width - w, 40);
             ctx.restore();
             ctx.translate(0, 30);
         }
