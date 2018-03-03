@@ -1,4 +1,5 @@
 var sonidoMenu = null;
+
 function initMenu() {
     const addPlayer = document.getElementById('addPlayer');
     const removePlayer = document.getElementById('removePlayer');
@@ -19,13 +20,33 @@ function initMenu() {
     var modo;
     var tiempo = -1;
 
+    const todosBotones = document.getElementsByTagName("a");
+    Array.prototype.filter.call(todosBotones, function (value) {
+        value.onmouseenter = function () {
+            if (mute.getAttribute('data-sound') === "1") {
+                const audio = new Audio('snd/pasarBoton.ogg');
+                audio.volume = 0.2;
+                audio.play();
+            }
+        };
+        value.onmouseup = function (ev) {
+
+            if (mute.getAttribute('data-sound') === "1") {
+                const audio = new Audio('snd/clickBoton.ogg');
+                audio.volume = 0.3;
+                audio.play();
+            }
+        }
+    });
+
+
     // Al hacer click en los botones iniciales, pasar a la siguiente pantalla
-    const botones = document.getElementsByClassName('btn_start');
-    Array.prototype.filter.call(botones, function (value) {
+    const botonesModoJuego = document.getElementsByClassName('btn_start');
+    Array.prototype.filter.call(botonesModoJuego, function (value) {
         value.onclick = function () {
             modos.style.display = 'none';
             interfaz.style.display = 'block';
-            switch(this.getAttribute("data-modo")) {
+            switch (this.getAttribute("data-modo")) {
                 case "Clasico":
                     modo = MODOS.CLASICO;
                     break;
@@ -57,14 +78,14 @@ function initMenu() {
     };
 
     // Añadir jugador
-    addPlayer.onclick = function (ev) {
+    addPlayer.onclick = function () {
         if (jugadoresN < 4) {
             ++jugadoresN;
         }
         actualizar();
     };
 
-    removePlayer.onclick = function (ev) {
+    removePlayer.onclick = function () {
         if (jugadoresN > 2) {
             --jugadoresN;
         }
@@ -84,12 +105,12 @@ function initMenu() {
             removePlayer.classList.remove("disabled");
         }
         for (let i = 1; i <= 4; ++i) {
-            let mostrar = i <= jugadoresN;
-            document.getElementById('player_' + i).style.opacity = (mostrar ? "1" : "0");
+            const mostrarJugador = i <= jugadoresN;
+            document.getElementById('player_' + i).style.opacity = (mostrarJugador ? "1" : "0");
         }
     }
 
-    blackholes.onchange = function (ev) {
+    blackholes.onchange = function () {
         harmless.style.display = (this.checked ? 'inline-block' : 'none');
     };
 
@@ -110,11 +131,11 @@ function initMenu() {
         }
     };
 
-    harmless.onclick = function (ev) {
+    harmless.onclick = function () {
         toggle(this);
     };
 
-    time.onclick = function (ev) {
+    time.onclick = function () {
         const textsTime = ['Infinite time', '2 minutes', '5 minutes'];
         const valuesTime = [-1, 2, 5];
 
@@ -136,31 +157,33 @@ function initMenu() {
 
         if (state === 1) {
             mute.innerHTML = "🔊";
-            sonido.muted = false;
+            sonidoMenu.muted = false;
         } else {
             mute.innerHTML = "🔈";
-            sonido.muted = true;
+            sonidoMenu.muted = true;
         }
     };
 
     // Empezar juego (ver main.js)
-    initGame.onclick = function(){
-        var maxAgujeros = Math.round(Math.random() * 4) + 2;
+    initGame.onclick = function () {
+        let maxAgujeros = Math.round(Math.random() * 4) + 2;
         if (!blackholes.classList.contains("active")) {
             maxAgujeros = 0;
         }
-        var agujerosInofensivos = harmless.classList.contains("active");
+
+        let agujerosInofensivos = harmless.classList.contains("active");
 
         // Hay jugadoresN jugadores
         // Es mejor generar la lista de jugadores aquí,
         // por si lo hacemos configurable (colores, teclas) más tarde.
-        var jugadores = [];
-        for(var i=1; i <= jugadoresN; i++) {
-            var rects = document.getElementById('player_' + i).getElementsByTagName("rect");
-            if(rects.length > 0) {
-                var color = rects[0].style.fill;
-                var mainKey = document.getElementById('player_' + i).getElementsByClassName("key")[0].getAttribute("data-keyCode");
-                var secondKey =  document.getElementById('player_' + i).getElementsByClassName("key")[1].getAttribute("data-keyCode");
+        const jugadores = [];
+        for (let i = 1; i <= jugadoresN; i++) {
+            const jugador = document.getElementById('player_' + i);
+            const rects = jugador.getElementsByTagName("rect");
+            if (rects.length > 0) {
+                const color = rects[0].style.fill;
+                const mainKey = jugador.getElementsByClassName("key")[0].getAttribute("data-keyCode");
+                const secondKey = jugador.getElementsByClassName("key")[1].getAttribute("data-keyCode");
                 jugadores.push(new Jugador(color, mainKey, secondKey));
             }
         }
