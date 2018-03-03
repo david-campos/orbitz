@@ -55,7 +55,8 @@ function Game(jugadores, modo, maxPlanetas, bolasExtra, tiempo, maxAgujeros, agu
     this.bolasGeneradas = false;
     this.iniciado = false;
     this.pausado = false;
-    this.finalizado = true;
+    this.finalizado = false;
+    this.apagado = false;
     this.inicioPartida=0; // Guarda el momento de inicio de la partida
     this.then=0; // Para calcular el tiempo entre frames
 }
@@ -91,20 +92,22 @@ Game.prototype.mainLoop = function() {
     }
 
     if(!this.pausado) {
-        this.update(delta / 1000);
         render(this);
+        if(!this.finalizado) {
+            this.update(delta / 1000);
 
-        //Fin de partida en modo no clásico
-        if (this.duracion > 0 &&
-            now - this.inicioPartida > this.duracion * 60000) {
-            this.finalizar(null);
-        }
-        // Eliminación de notas antiguas
-        for (var i in Log.notas) {
-            if (Log.notas[i].t < now) {
-                Log.notas.splice(parseInt(i), 1);
-            } else {
-                break;
+            //Fin de partida en modo no clásico
+            if (this.duracion > 0 &&
+                now - this.inicioPartida > this.duracion * 60000) {
+                this.finalizar(null);
+            }
+            // Eliminación de notas antiguas
+            for (var i in Log.notas) {
+                if (Log.notas[i].t < now) {
+                    Log.notas.splice(parseInt(i), 1);
+                } else {
+                    break;
+                }
             }
         }
     }
@@ -112,7 +115,7 @@ Game.prototype.mainLoop = function() {
     this.then = now;
     // Request to do this again ASAP
     var self = this;
-    if(!this.finalizado)
+    if(!this.apagado)
         requestAnimationFrame(function(){self.mainLoop()});
 };
 
@@ -437,14 +440,14 @@ Game.prototype.finalizar = function(superviviente) {
             break;
     }
     var self = this;
-    setTimeout(function() {
-        self.finalizado = true;
-        reproducir(sonidos.claxon);
-        glob_overscreen.innerHTML = document.getElementById("restartScreen").innerHTML;
-        var buttons = glob_overscreen.getElementsByTagName("a");
-        buttons[0].onclick = restart;
-        buttons[1].onclick = mainMenu;
-    }, 100);
+    self.finalizado = true;
+    reproducir(sonidos.claxon);
+    sonidos.fondo.pause();
+    reproducir(sonidos.finalizado);
+    glob_overscreen.innerHTML = document.getElementById("restartScreen").innerHTML;
+    var buttons = glob_overscreen.getElementsByTagName("a");
+    buttons[0].onclick = restart;
+    buttons[1].onclick = mainMenu;
 };
 
 /**
@@ -559,4 +562,8 @@ Game.prototype.puedeRepetirSonidos = function(keyCode) {
             this.jugadores[i].noRepetirSonidos = {};
         }
     }
+};
+
+Game.prototype.apagar = function() {
+    this.apagado = true;
 };

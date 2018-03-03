@@ -16,6 +16,9 @@ sonidos.cinta.volume = 0.8;
 sonidos.golpe = new Audio('snd/golpe.ogg');
 sonidos.golpe.volume = 0.8;
 
+sonidos.finalizado = new Audio('snd/beat_culture_julien.mp3');
+sonidos.finalizado.volume = 0.3;
+
 var fondos = [
     new Audio('snd/Jay_Krewel_Break_The_Rules.ogg'),
     new Audio('snd/Space And Time.mp3'),

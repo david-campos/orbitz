@@ -49,7 +49,7 @@ function iniciar(jugadores, modo, tiempo, maxAgujeros, agujerosInofensivos) {
     document.getElementById("menu").style.display = "none";
     document.getElementById("juego").style.display = "block";
     document.documentElement.style.animation = "unset";
-    var maxPlanetas = 20 + Math.round(Math.random() * 10) - maxAgujeros;
+    var maxPlanetas = 20 + Math.round(Math.random() * 5) - maxAgujeros;
     var bolasExtra = Math.round(Math.random() * 5) + 5;
     juego = new Game(jugadores, modo, maxPlanetas, bolasExtra, tiempo, maxAgujeros, agujerosInofensivos);
     sonidoMenu.pause();
@@ -66,7 +66,8 @@ function elToquecito() {
 function restart() {
     // Cerramos menu restart
     glob_overscreen.innerHTML = "";
-    sonidos.fondo.pause();
+    sonidos.finalizado.pause();
+    juego.apagar();
 
     // Recreamos jugadores y juego
     glob_overscreen.style.backgroundColor = "black";
@@ -88,7 +89,8 @@ function restart() {
 function mainMenu() {
     // Cerramos menu restart
     glob_overscreen.innerHTML = "";
-    sonidos.fondo.pause();
+    sonidos.finalizado.pause();
+    juego.apagar();
 
     //glob_overscreen.style.backgroundColor = "black";
 
