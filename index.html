@@ -85,42 +85,40 @@
                     <!-- Players -->
                     <div class="col-md-6">
                         <h5 class="mb-3">Players</h5>
-                        <div id="player_1">
-                            <p>
+                        <table class="players" id="tabla-jugadores">
+                        <tr id="player_1">
+                            <td>
                                 <svg width="20" height="20">
-                                    <rect width="20" height="20" style="fill:#000099;" rx="2" ry="2"></rect>
-                                </svg>&nbsp;&nbsp;&nbsp;
-                                <span class="key" data-keyCode="32">Space key</span>
-                                <span class="key" data-keyCode="18">Alt key</span>
-                            </p>
-                        </div>
-                        <div id="player_2">
-                            <p>
+                                    <rect width="20" height="20" rx="2" ry="2"></rect>
+                                </svg></td>
+                            <td><span class="key" data-keyCode="32">Space key</span></td>
+                            <td><span class="key" data-keyCode="18">Alt key</span></td>
+                        </tr>
+                        <tr id="player_2">
+                            <td>
                                 <svg width="20" height="20">
-                                    <rect width="20" height="20" style="fill:#990000;" rx="2" ry="2"></rect>
-                                </svg>&nbsp;&nbsp;&nbsp;
-                                <span class="key" data-keyCode="13">Enter key</span>
-                                <span class="key" data-keyCode="8">Backspace/delete key</span>
-                            </p>
-                        </div>
-                        <div id="player_3" style="opacity:0">
-                            <p>
+                                    <rect width="20" height="20" rx="2" ry="2"></rect>
+                                </svg></td>
+                            <td><span class="key" data-keyCode="13">Enter key</span></td>
+                            <td><span class="key" data-keyCode="8">Backspace/delete key</span></td>
+                        </tr>
+                        <tr id="player_3" style="opacity:0">
+                            <td>
                                 <svg width="20" height="20">
-                                    <rect width="20" height="20" style="fill:#009900;" rx="2" ry="2"></rect>
-                                </svg>&nbsp;&nbsp;&nbsp;
-                                <span class="key" data-keyCode="81">Q key</span>
-                                <span class="key" data-keyCode="65">A key</span>
-                            </p>
-                        </div>
-                        <div id="player_4" style="opacity:0">
-                            <p>
+                                    <rect width="20" height="20" rx="2" ry="2"></rect>
+                                </svg></td>
+                            <td><span class="key" data-keyCode="81">Q key</span></td>
+                            <td><span class="key" data-keyCode="65">A key</span></td>
+                        </tr>
+                        <tr id="player_4" style="opacity:0">
+                            <td>
                                 <svg width="20" height="20">
-                                    <rect width="20" height="20" style="fill:#999900;" rx="2" ry="2"></rect>
-                                </svg>&nbsp;&nbsp;&nbsp;
-                                <span class="key" data-keyCode="190">Dot key (.)</span>
-                                <span class="key" data-keyCode="189">Dash key (-)</span>
-                            </p>
-                        </div>
+                                    <rect width="20" height="20" rx="2" ry="2"></rect>
+                                </svg></td>
+                            <td><span class="key" data-keyCode="190">Dot key (.)</span></td>
+                            <td><span class="key" data-keyCode="189">Dash key (-)</span></td>
+                        </tr>
+                        </table>
 
                         <a class="btn btn-outline-primary" id="addPlayer">Add player</a>
                         <a class="btn btn-outline-primary disabled" id="removePlayer">Remove player</a>

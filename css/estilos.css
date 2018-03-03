@@ -97,6 +97,25 @@ h1 {
     text-shadow: 0 0 10px #6f42c1, 0 0 10px #6f42c1;
 }
 
+table.players {
+    margin-bottom: 1.5em;
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    -khtml-user-select: none; /* Konqueror HTML */
+}
+
+table.players td{
+    padding-right: 1em;
+}
+
+table.players rect {
+    cursor: pointer;
+}
+
 .restart-card {
     width: 40%;
     top: 40%;
@@ -152,7 +171,6 @@ a {
 
 .key {
     border-bottom: 2px solid #EEEEEE;
-    margin-right: 1em;
     padding-bottom: 2px;
 }
 
