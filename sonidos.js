@@ -17,7 +17,7 @@ sonidos.golpe = new Audio('snd/golpe.ogg');
 sonidos.golpe.volume = 0.8;
 
 var fondos = [
-    new Audio('snd/Jay_Krewel_Break_The_Rules.mp3'),
+    new Audio('snd/Jay_Krewel_Break_The_Rules.ogg'),
     new Audio('snd/Space And Time.mp3'),
     new Audio('snd/Zythian_Bring_It_Back.mp3')
 ];

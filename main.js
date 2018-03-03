@@ -50,7 +50,7 @@ function iniciar(jugadores, modo, tiempo, maxAgujeros, agujerosInofensivos) {
     document.getElementById("juego").style.display = "block";
     document.documentElement.style.animation = "unset";
     //backgroundAnim 200s infinite
-    var maxPlanetas = 20 - maxAgujeros;
+    var maxPlanetas = 20 + Math.round(Math.random() * 10) - maxAgujeros;
     var bolasExtra = Math.round(Math.random() * 5) + 5;
     juego = new Game(jugadores, modo, maxPlanetas, bolasExtra, tiempo, maxAgujeros, agujerosInofensivos);
     sonidoMenu.pause();
