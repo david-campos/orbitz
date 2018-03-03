@@ -1,3 +1,7 @@
+var jugadoresN = 2;
+var modo;
+var tiempo = -1;
+
 window.onload = function () {
     // Iniciar partida
     const addPlayer = document.getElementById('addPlayer');
@@ -18,29 +22,29 @@ window.onload = function () {
     // Al hacer click en los botones iniciales, pasar a la siguiente pantalla
     const botones = document.getElementsByClassName('btn_start');
     Array.prototype.filter.call(botones, function (value) {
-        value.onclick = function (ev) {
-           modos.style.display = 'none';
+        value.onclick = function () {
+            modos.style.display = 'none';
             interfaz.style.display = 'block';
+            modo = this.getAttribute("data-modo");
         }
     });
 
     const goBack = document.getElementsByClassName('goBack');
     Array.prototype.filter.call(goBack, function (value) {
-        value.onclick = function (ev) {
+        value.onclick = function () {
             modos.style.display = 'block';
             interfaz.style.display = 'none';
             creditos.style.display = 'none';
         }
     });
 
-    goCredits.onclick = function(ev) {
+    goCredits.onclick = function () {
         modos.style.display = 'none';
         interfaz.style.display = 'none';
         creditos.style.display = 'block';
     };
 
     // Añadir jugador
-    let jugadoresN = 2;
     addPlayer.onclick = function (ev) {
         if (jugadoresN < 4) {
             ++jugadoresN;
@@ -77,10 +81,6 @@ window.onload = function () {
         harmless.style.display = (this.checked ? 'inline-block' : 'none');
     };
 
-    initGame.onclick = function () {
-        alert("empiesa no mas");
-    };
-
     let toggle = function (ev) {
         if (ev.classList.contains("active")) {
             ev.classList.remove("active");
@@ -89,7 +89,7 @@ window.onload = function () {
         }
     };
 
-    blackholes.onclick = function (ev) {
+    blackholes.onclick = function () {
         toggle(this);
         if (this.classList.contains("active")) {
             harmless.style.display = "inline-block";
@@ -102,18 +102,21 @@ window.onload = function () {
         toggle(this);
     };
 
-    time.onclick = function(ev) {
+    time.onclick = function (ev) {
         const textsTime = ['Infinite time', '2 minutes', '5 minutes'];
         const valuesTime = [-1, 2, 5];
 
         let state = time.getAttribute('data-time');
         state = (state + 1) % textsTime.length;
+
+        tiempo = valuesTime[state];
+
         time.setAttribute('data-time', state);
 
         time.innerHTML = textsTime[state];
     };
 
-    mute.onclick = function(ev) {
+    mute.onclick = function () {
         let state = mute.getAttribute('data-sound');
 
         state = 1 - state;
@@ -126,5 +129,23 @@ window.onload = function () {
             mute.innerHTML = "🔈";
             sonido.muted = true;
         }
-    }
+    };
+
+    // Empezar juego
+    initGame.onclick = function () {
+        let maxAgujeros = Math.round(Math.random() * 4) + 2;
+        if (!blackholes.classList.contains("active")) {
+            maxAgujeros = 0;
+        }
+        let maxPlanetas = 20 - maxAgujeros;
+        let bolasExtra = Math.round(Math.random() * 5) + 5;
+        let agujerosInofensivos = harmless.classList.contains("active");
+
+        // Hay jugadoresN jugadores
+
+        // Faltaria descomentar esta linea
+        // juego = new Game(jugadores, modo, maxPlanetas, bolasExtra, tiempo, maxAgujeros, agujerosInofensivos);
+
+    };
+
 };
