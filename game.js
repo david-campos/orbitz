@@ -441,6 +441,9 @@ Game.prototype.finalizar = function(superviviente) {
         self.finalizado = true;
         reproducir(sonidos.claxon);
         glob_overscreen.innerHTML = document.getElementById("restartScreen").innerHTML;
+        var buttons = glob_overscreen.getElementsByTagName("a");
+        buttons[0].onclick = restart;
+        buttons[1].onclick = mainMenu;
     }, 100);
 };
 
