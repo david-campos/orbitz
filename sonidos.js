@@ -24,8 +24,6 @@ sonidos.fondo = new Audio(fondos[Math.floor(Math.random() * fondos.length)]);
 sonidos.fondo.volume = 0.3;
 sonidos.fondo.loop = true;
 
-sonidos.fondo.play();
-
 /**
  * Reproduce el sonido indicado
  * @param {Audio} sonido

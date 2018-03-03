@@ -1,9 +1,5 @@
-var jugadoresN = 2;
-var modo;
-var tiempo = -1;
-
-window.onload = function () {
-    // Iniciar partida
+var sonidoMenu = null;
+function initMenu() {
     const addPlayer = document.getElementById('addPlayer');
     const removePlayer = document.getElementById('removePlayer');
     const blackholes = document.getElementById('blackholes');
@@ -11,13 +7,17 @@ window.onload = function () {
     const initGame = document.getElementById('initGame');
     const time = document.getElementById('time');
     const mute = document.getElementById('mute');
-    const sonido = document.getElementById('sonido');
 
     const modos = document.getElementById('modos');
     const interfaz = document.getElementById('interfaz');
     const creditos = document.getElementById('creditos');
 
     const goCredits = document.getElementById('goCredits');
+    sonidoMenu = document.getElementById('sonido');
+
+    var jugadoresN = 2;
+    var modo;
+    var tiempo = -1;
 
     // Al hacer click en los botones iniciales, pasar a la siguiente pantalla
     const botones = document.getElementsByClassName('btn_start');
@@ -25,7 +25,17 @@ window.onload = function () {
         value.onclick = function () {
             modos.style.display = 'none';
             interfaz.style.display = 'block';
-            modo = this.getAttribute("data-modo");
+            switch(this.getAttribute("data-modo")) {
+                case "Clasico":
+                    modo = MODOS.CLASICO;
+                    break;
+                case "Instinto":
+                    modo = MODOS.INSTINTO;
+                    break;
+                case "Centro":
+                    modo = MODOS.CENTRO;
+                    break;
+            }
         }
     });
 
@@ -131,21 +141,28 @@ window.onload = function () {
         }
     };
 
-    // Empezar juego
-    initGame.onclick = function () {
-        let maxAgujeros = Math.round(Math.random() * 4) + 2;
+    // Empezar juego (ver main.js)
+    initGame.onclick = function(){
+        var maxAgujeros = Math.round(Math.random() * 4) + 2;
         if (!blackholes.classList.contains("active")) {
             maxAgujeros = 0;
         }
-        let maxPlanetas = 20 - maxAgujeros;
-        let bolasExtra = Math.round(Math.random() * 5) + 5;
-        let agujerosInofensivos = harmless.classList.contains("active");
+        var agujerosInofensivos = harmless.classList.contains("active");
 
         // Hay jugadoresN jugadores
+        // Es mejor generar la lista de jugadores aquí,
+        // por si lo hacemos configurable (colores, teclas) más tarde.
+        var jugadores = [];
+        for(var i=1; i <= jugadoresN; i++) {
+            var rects = document.getElementById('player_' + i).getElementsByTagName("rect");
+            if(rects.length > 0) {
+                var color = rects[0].style.fill;
+                var mainKey = document.getElementById('player_' + i).getElementsByClassName("key")[0].getAttribute("data-keyCode");
+                var secondKey =  document.getElementById('player_' + i).getElementsByClassName("key")[1].getAttribute("data-keyCode");
+                jugadores.push(new Jugador(color, mainKey, secondKey));
+            }
+        }
 
-        // Faltaria descomentar esta linea
-        // juego = new Game(jugadores, modo, maxPlanetas, bolasExtra, tiempo, maxAgujeros, agujerosInofensivos);
-
+        iniciar(jugadores, modo, tiempo, maxAgujeros, agujerosInofensivos);
     };
-
-};
+}

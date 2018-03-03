@@ -10,7 +10,9 @@ window.onload = function() {
     iconos_asteroides.transporte.src = "img/ico_rayo.png";
     canvas = document.getElementById("mainframe");
     ctx = canvas.getContext("2d");
-
+    // Iniciar menú
+    initMenu();
+    // Ajustar canvas
     redimensionar(window.innerWidth, window.innerHeight);
 };
 
@@ -20,26 +22,29 @@ function resolucionInsuficiente(activo) {
     if(!juego) return;
 
     if(juego.iniciado && !juego.pausado) {
-        document.getElementById("juego").style.display = "none";
-        document.getElementById("resIns").style.display = "block";
-        document.getElementById("resIns").innerHTML =
+        document.getElementById("overscreen").innerHTML =
             "Resolución insuficiente, la resolución mínima es " + MIN_W + "x" + MIN_H + ".";
     }
     if(juego.iniciado) {
-        document.getElementById("juego").style.display = "block";
-        document.getElementById("resIns").style.display = "none";
+        document.getElementById("overscreen").innerHTML = "";
     }
     juego.pausado = activo;
 }
 
-function iniciar() {
-    document.getElementById("inicio").style.display = "none";
+/**
+ * Muestra e inicia el juego
+ * @param {[Jugador]} jugadores jugadores para el juego
+ * @param {String} modo modo de juego, ver MODOS
+ * @param {Number} tiempo minutos de juego (-1 para infinito)
+ * @param {int} maxAgujeros número máximo de agujeros
+ * @param {boolean} agujerosInofensivos si true, los agujeros no matarán al jugador
+ */
+function iniciar(jugadores, modo, tiempo, maxAgujeros, agujerosInofensivos) {
     document.getElementById("juego").style.display = "block";
-    juego = new Game(
-        [
-            new Jugador("#900", 32, 90), // Spacebar, Z
-            new Jugador("#090", 13, 191) // Enter, Ç
-        ],
-        MODOS.CENTRO, 20, 2, 10, 5, false);
+    var maxPlanetas = 20 - maxAgujeros;
+    var bolasExtra = Math.round(Math.random() * 5) + 5;
+    juego = new Game(jugadores, modo, maxPlanetas, bolasExtra, tiempo, maxAgujeros, agujerosInofensivos);
+    sonidoMenu.pause();
+    sonidos.fondo.play();
     juego.start();
 }
