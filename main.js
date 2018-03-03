@@ -40,6 +40,6 @@ function iniciar() {
             new Jugador("#900", 32, 90), // Spacebar, Z
             new Jugador("#090", 13, 191) // Enter, Ç
         ],
-        MODOS.CENTRO, 20, 2, 0.2, 5, false);
+        MODOS.CENTRO, 20, 2, 10, 5, false);
     juego.start();
 }

@@ -211,17 +211,17 @@ var render = function(juego) {
         // Math.round(jugadores[i].ultimaMuerte/60000) mins
         var restante =  Math.round(juego.duracion*30 - (Date.now() - juego.inicioPartida)/2000);
 
-        if(restante < 0 || restante > 9) return;
-
-        var rojo = juego.duracion*60000 - (Date.now() - juego.inicioPartida); //Restante en milisegundos
-        rojo = rojo%2000; //Cíclico cada 2 segundos
-        rojo = (Math.sin(rojo/1000*Math.PI+Math.PI/4)+1)/2;
-        for(i=1;i<=restante;i++) {
-            ctx.beginPath();
-            ctx.rect(MAP.w / 2 - 200 + i*4 + (i-1)*19, MAP.h - 40, 19, 36);
-            ctx.fillStyle = "rgba(200,0,0,"+rojo+")";
-            ctx.fill();
-            ctx.closePath();
+        if(restante >= 0 && restante < 10) {
+            var rojo = juego.duracion * 60000 - (Date.now() - juego.inicioPartida); //Restante en milisegundos
+            rojo = rojo % 2000; //Cíclico cada 2 segundos
+            rojo = (Math.sin(rojo / 1000 * Math.PI + Math.PI / 4) + 1) / 2;
+            for (i = 1; i <= restante; i++) {
+                ctx.beginPath();
+                ctx.rect(MAP.w / 2 - 200 + i * 4 + (i - 1) * 19, MAP.h - 40, 19, 36);
+                ctx.fillStyle = "rgba(200,0,0," + rojo + ")";
+                ctx.fill();
+                ctx.closePath();
+            }
         }
     }
 

@@ -143,9 +143,6 @@ Planeta.prototype.bolasUpdate = function(elapsedSeconds) {
 
     for(var i in this.bolas) {
         var bola = this.bolas[i];
-        if(this.bolas[i].planeta !== this) {
-            console.log("WTF?!");
-        }
         bola.updateEnOrbita(elapsedSeconds);
 
         // Si esto es un centro y la bola tiene jugador,
@@ -234,17 +231,16 @@ Planeta.prototype.bolasUpdate = function(elapsedSeconds) {
     // Solo cuenta para el centro cuando una bola es la única
     // de algún jugador en el planeta.
     if(this.centro && bolasConJugador.length === 1) {
-        bola = bolasConJugador[0];
-        if(bola.jugador && this.centro) {
+        var jug = bolasConJugador[0].jugador;
+        if(jug && this.centro) {
             if(this.ultimo) this.ultimo.ultimo = false;
-            this.ultimo = true;
-            this.ultimo = bola.jugador;
+            this.ultimo = jug;
+            jug.ultimo = true;
 
-            this.tiempo += elapsedSeconds;
-            if(this.tiempo > this.mayor_t)
-            {
-                this.mayor_t = bola.jugador.tiempo;
-                this.mayor_t_j = bola.jugador;
+            jug.tiempo += elapsedSeconds;
+            if(jug.tiempo > this.mayor_t) {
+                this.mayor_t = jug.tiempo;
+                this.mayor_t_j = jug;
             }
         }
     }

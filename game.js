@@ -156,13 +156,18 @@ Game.prototype.physicsUpdate = function(elapsedSeconds) {
             continue;
         }
 
-        this.bolaColisionBordes(bola);
+        this.bolaColisionBordes(bola, elapsedSeconds);
         if(!bola.viva) {
             // Si ha caído fuera del campo
             continue;
         }
 
         this.orbitarPlanetaQuizas(bola);
+
+        if(bola.planetaAnt) {
+            if(moduloVector(bola.x - bola.planetaAnt.x, bola.y-bola.planetaAnt.y) > bola.planetaAnt.rg + RADIO_BOLAS)
+                bola.planetaAnt = null; // Ya no cuenta el planeta anterior (puede volver a él)
+        }
     }
 };
 
@@ -170,17 +175,20 @@ Game.prototype.physicsUpdate = function(elapsedSeconds) {
  * Comprueba si la bola ha colisionado con los bordes
  * y realiza las acciones correspondientes
  * @param {Bola} bola
+ * @param {Number} elapsedSeconds segundos desde el último frame
  */
-Game.prototype.bolaColisionBordes = function(bola) {
+Game.prototype.bolaColisionBordes = function(bola, elapsedSeconds) {
     if(bola.x < 0 || bola.x > MAP.w) {
         bola.v.x *= -1;
-        //bola.x += bola.v.x * elapsedSeconds;
+        bola.x += bola.v.x * elapsedSeconds; // Previene que se atasque allí
+        bola.planetaAnt = null; // Ya no cuenta el planeta anterior (puede volver a él)
         reproducir(sonidos.pong2);
         bola.damage(this, "Fuera del campo.");
     }
     if(bola.y < 0 || bola.y > MAP.h) {
         bola.v.y *= -1;
-        //bola.y += bola.v.y * elapsedSeconds;
+        bola.y += bola.v.y * elapsedSeconds; // Previene el atasco ahí
+        bola.planetaAnt = null; // Ya no cuenta el planeta anterior (puede volver a él)
         reproducir(sonidos.pong2);
         bola.damage(this, "Fuera del campo.");
     }
@@ -298,6 +306,7 @@ Game.prototype.bolaLibreUpdate = function(bola, elapsedSeconds) {
                         bola.x = this.agujeros[j].x;
                         bola.y = this.agujeros[j].y;
                         bola.noTragar = this.agujeros[j];
+                        bola.planetaAnt = null; // Ya no cuenta el planeta anterior (puede volver a él)
                     } else {
                         // Si no lo tiene, la matamos
                         bola.damage(this, "Agujero negro.", true);
