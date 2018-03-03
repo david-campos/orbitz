@@ -1,4 +1,5 @@
 var sonidoMenu = null;
+var muteBtn = null;
 
 function initMenu() {
     const addPlayer = document.getElementById('addPlayer');
@@ -7,7 +8,7 @@ function initMenu() {
     const harmless = document.getElementById('harmless');
     const initGame = document.getElementById('initGame');
     const time = document.getElementById('time');
-    const mute = document.getElementById('mute');
+    muteBtn = document.getElementById('mute');
 
     const modos = document.getElementById('modos');
     const interfaz = document.getElementById('interfaz');
@@ -23,7 +24,7 @@ function initMenu() {
     const todosBotones = document.getElementsByTagName("a");
     Array.prototype.filter.call(todosBotones, function (value) {
         value.onmouseenter = function () {
-            if (mute.getAttribute('data-sound') === "1") {
+            if (muteBtn.getAttribute('data-sound') === "1") {
                 const audio = new Audio('snd/pasarBoton.ogg');
                 audio.volume = 0.2;
                 audio.play();
@@ -31,7 +32,7 @@ function initMenu() {
         };
         value.onmouseup = function (ev) {
 
-            if (mute.getAttribute('data-sound') === "1") {
+            if (muteBtn.getAttribute('data-sound') === "1") {
                 const audio = new Audio('snd/clickBoton.ogg');
                 audio.volume = 0.3;
                 audio.play();
@@ -149,19 +150,8 @@ function initMenu() {
         time.innerHTML = textsTime[state];
     };
 
-    mute.onclick = function () {
-        let state = mute.getAttribute('data-sound');
-
-        state = 1 - state;
-        mute.setAttribute('data-sound', state);
-
-        if (state === 1) {
-            mute.innerHTML = "🔊";
-            sonidoMenu.muted = false;
-        } else {
-            mute.innerHTML = "🔈";
-            sonidoMenu.muted = true;
-        }
+    muteBtn.onclick = function () {
+        toggleMute(); // sonidos.js
     };
 
     // Empezar juego (ver main.js)

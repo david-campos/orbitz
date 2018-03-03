@@ -4,8 +4,11 @@ var fullScreen = false;
 
 addEventListener("keydown", function (e) {
 	keysDown[e.keyCode] = true;
-	
-	if(e.keyCode === 70) {
+
+	if(e.keyCode === 77) {
+	    // Tecla M = muteBtn
+        toggleMute();
+    } else if(e.keyCode === 70) {
 	    // Tecla F = fullscreen
         if(!fullScreen) {
             requestFullscreen(document.body);
@@ -20,8 +23,8 @@ addEventListener("keydown", function (e) {
     } else if(e.keyCode === 76) {
 	    // L
         glob_debugMode = !glob_debugMode;
-    } else if(e.keyCode === 116) {
-	    // F5
+    } else if(e.keyCode === 116 || e.keyCode === 122) {
+	    // F5, F11
         return true;
     }
 

@@ -19,6 +19,9 @@ sonidos.golpe.volume = 0.8;
 sonidos.finalizado = new Audio('snd/beat_culture_julien.mp3');
 sonidos.finalizado.volume = 0.3;
 
+/**
+ * @type {[Audio]}
+ */
 var fondos = [
     new Audio('snd/Jay_Krewel_Break_The_Rules.ogg'),
     new Audio('snd/Space And Time.mp3'),
@@ -39,4 +42,21 @@ sonidos.fondo.loop = true;
 function reproducir(sonido) {
     sonido.currentTime = 0;
     sonido.play();
+}
+
+var glob_muted = false;
+function toggleMute() {
+    glob_muted = !glob_muted;
+    for(var key in sonidos) {
+        sonidos[key].muted = glob_muted;
+    }
+    for(key in fondos) {
+        fondos[key].muted = glob_muted;
+    }
+    sonidoMenu.muted = glob_muted;
+
+    // Menú
+    if(muteBtn) {
+        muteBtn.innerHTML = (glob_muted?"🔈":"🔊");
+    }
 }
