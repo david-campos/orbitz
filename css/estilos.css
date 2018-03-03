@@ -1,5 +1,5 @@
 html {
-    animation: example 200s infinite;
+    animation: backgroundAnim 200s infinite;
     animation-timing-function: linear;
     background-position-y: 50%;
     background-size: auto 100%;
@@ -23,7 +23,7 @@ canvas#mainframe { z-index: 101; }
 div#overscreen { z-index: 102; }
 
 /* The animation code */
-@keyframes example {
+@keyframes backgroundAnim {
     from {
         background-position-x: 0;
     }
@@ -87,6 +87,12 @@ h1 {
     letter-spacing: 5px;
     margin-bottom: 0.5em;
     text-shadow: 0 0 10px #6f42c1, 0 0 10px #6f42c1;
+}
+
+.restart-card {
+    width: 40%;
+    top: 40%;
+    left: 30%;
 }
 
 #mute {

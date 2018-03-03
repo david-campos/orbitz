@@ -96,7 +96,6 @@ Game.prototype.mainLoop = function() {
 
         //Fin de partida en modo no clásico
         if (this.duracion > 0 &&
-            this.modo !== MODOS.CLASICO &&
             now - this.inicioPartida > this.duracion * 60000) {
             this.finalizar(null);
         }
@@ -390,8 +389,12 @@ Game.prototype.finalizar = function(superviviente) {
     Log.clear();
     switch(this.modo) {
         case MODOS.CLASICO:
-            Log.nuevaNota("Winner: Player " + superviviente.id, superviviente);
-            break;
+            if(superviviente) {
+                Log.nuevaNota("Winner: Player " + superviviente.id, superviviente);
+                break;
+            }
+            // Si no, esto es como el modo instinto
+            // No break
         case MODOS.INSTINTO:
             var menor = 0;
             var empate = true;
@@ -437,6 +440,7 @@ Game.prototype.finalizar = function(superviviente) {
     setTimeout(function() {
         self.finalizado = true;
         reproducir(sonidos.claxon);
+        glob_overscreen.innerHTML = document.getElementById("restartScreen").innerHTML;
     }, 100);
 };
 

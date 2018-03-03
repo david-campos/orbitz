@@ -207,7 +207,7 @@ var render = function(juego) {
     }
 
     //Reloj
-    if(juego.modo !== MODOS.CLASICO && juego.duracion > 0) {
+    if(juego.duracion > 0) {
         // Math.round(jugadores[i].ultimaMuerte/60000) mins
         var restante =  Math.round(juego.duracion*30 - (Date.now() - juego.inicioPartida)/2000);
 

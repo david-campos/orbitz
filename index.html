@@ -27,7 +27,7 @@
     <script src="main.js" type="text/javascript" async></script>
 </head>
 <body>
-<div class="container">
+<div class="container" id="menu">
     <h1>ORBITZ</h1>
     <!-- Modos de juego -->
     <div id="modos">
@@ -198,14 +198,25 @@
 
         <a class="btn btn-primary text-white mt-3 goBack">Go back</a>
     </div>
+</div>
 
-    <!-- Juego -->
-    <div id="juego" style="display: none">
-        <img id="bkgrd" src="img/background.png">
-        <canvas id="mainframe">
-            Tu navegador es un pringuis, no puedes soportar la etiqueta canvas. :(
-        </canvas>
-        <div id="overscreen"></div>
+<!-- Juego -->
+<div id="juego" style="display: none">
+    <img id="bkgrd" src="img/background.png">
+    <canvas id="mainframe">
+        Tu navegador es un pringuis, no puedes soportar la etiqueta canvas. :(
+    </canvas>
+    <div id="overscreen"></div>
+</div>
+
+<!-- Reinicio -->
+<div  style="display: none" id="restartScreen">
+    <div class="card text-white bg-primary restart-card">
+        <div class="card-header"><h4 class="card-title">Restart?</h4></div>
+        <div class="card-body">
+            <a class="btn btn-outline-primary btn-lg btn-block btn_start" onclick="restart();">Restart</a>
+            <a class="btn btn-outline-primary btn-lg btn-block btn_start" onclick="mainMenu();">Main menu</a>
+        </div>
     </div>
 </div>
 
