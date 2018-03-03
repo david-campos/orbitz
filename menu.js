@@ -47,6 +47,10 @@ function initMenu() {
         value.onclick = function () {
             modos.style.display = 'none';
             interfaz.style.display = 'block';
+
+            time.innerText = "Infinite time";
+            time.setAttribute("data-time", "0");
+
             switch (this.getAttribute("data-modo")) {
                 case "Clasico":
                     modo = MODOS.CLASICO;
@@ -55,6 +59,9 @@ function initMenu() {
                     modo = MODOS.INSTINTO;
                     break;
                 case "Centro":
+                    time.innerText = "2 minutes";
+                    time.setAttribute("data-time", "1");
+
                     modo = MODOS.CENTRO;
                     break;
             }
@@ -142,6 +149,10 @@ function initMenu() {
 
         let state = time.getAttribute('data-time');
         state = (state + 1) % textsTime.length;
+
+        if (modo === MODOS.CENTRO && state === 0) {
+            ++state;
+        }
 
         tiempo = valuesTime[state];
 
