@@ -13,6 +13,8 @@ window.onload = function() {
     iconos_asteroides.planetLover.src = "img/ico_gravedad.png";
     canvas = document.getElementById("mainframe");
     ctx = canvas.getContext("2d");
+    secondCanvas = document.getElementById("backframe");
+    scdCtx = secondCanvas.getContext("2d");
     glob_overscreen = document.getElementById("overscreen");
     // Iniciar menú
     initMenu();

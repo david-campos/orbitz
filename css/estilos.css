@@ -17,7 +17,7 @@ html {
 }
 
 /* Elementos de juego */
-div#juego, img#bkgrd, canvas#mainframe, div#overscreen {
+div#juego, img#bkgrd, canvas#mainframe, canvas#backframe, div#overscreen {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -37,12 +37,16 @@ img#bkgrd {
     z-index: 100;
 }
 
-canvas#mainframe {
+canvas#backframe {
     z-index: 101;
 }
 
-div#overscreen {
+canvas#mainframe {
     z-index: 102;
+}
+
+div#overscreen {
+    z-index: 103;
 }
 
 /* The animation code */

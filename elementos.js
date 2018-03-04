@@ -189,9 +189,11 @@ function Planeta(x, y, r, rg, centro) {
     this.n_imagen = Math.floor(ran * PICS_PLANETAS_N);
     this.ang = ran * 10;
     this.vel = (0.001 + ran * 0.009) * Math.pow(-1, Math.floor(ran * 10));
+    this.rotarEn = 0;
 
     //Si la imagen no se cargó para otro Planeta, se carga.
     this.cargarImagen();
+    this.renderizado = null;
 
     this.rg = rg;
     this.nodisponible = 0; // Tiempo que está no disponible (se actualiza durante el juego)
@@ -397,15 +399,34 @@ Planeta.prototype.bolasUpdate = function (elapsedSeconds) {
  * Si no se cargó la imagen para otro planeta, la cargamos ahora
  */
 Planeta.prototype.cargarImagen = function () {
-    if (!glob_plt_imgs[this.n_imagen]) {
-        var nImagen = new Image();
-        nImagen.ready = false;
-        nImagen.src = "img/planeta_" + this.n_imagen + ".png";
-        nImagen.onload = function () {
-            this.ready = true;
-        };
-        glob_plt_imgs[this.n_imagen] = nImagen;
+    var self = this;
+    self.imagen = new Image();
+    self.imagen.src = "img/planeta_" + this.n_imagen + ".png";
+    self.imagen.onload = function () {
+        self.renderizado = document.createElement("canvas");
+        self.renderizado.width = 2*self.r;
+        self.renderizado.height = 2*self.r;
+        self.ctx = self.renderizado.getContext("2d");
+        self.ctx.save();
+        self.rotar();
+    };
+};
+
+Planeta.prototype.rotar = function() {
+    if(this.renderizado) {
+        this.ctx.clearRect(0, 0, this.r*2, this.r*2);
+        this.ctx.save();
+        this.ctx.translate(this.r, this.r);
+        this.ctx.rotate(this.ang);
+        this.ang = (this.ang + this.vel)%(2*Math.PI);
+        this.ctx.drawImage(this.imagen,
+            -this.r,
+            -this.r,
+            this.r*2,
+            this.r*2);
+        this.ctx.restore();
     }
+    this.rotarEn = Date.now() + 100;
 };
 
 function Agujero(x, y, r, c, a) {

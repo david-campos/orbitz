@@ -34,6 +34,7 @@ const PROB_INQUIETO = 0.004;
 // var controlesNombre = ["Espacio", "Enter", "Tecla Q", "Tecla >", "Asterisco(*)", "Tecla º", "Tecla D", "Tecla G", "Tecla J", "Tecla L"];
 
 // DISPLAY
+const RENDERIZADO_LENTO_TIME = 166;
 const PICS_PLANETAS_N = 17;
 var glob_plt_imgs=[];
 const MIN_W = 800;
@@ -47,7 +48,9 @@ var glob_fps_min = Infinity;
 
 // CANVAS AND GAME
 var canvas = null;
+var secondCanvas = null;
 var ctx = null;
+var scdCtx = null;
 var juego = null;
 
 function globf_esModo(modo) {

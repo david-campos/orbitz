@@ -51,6 +51,7 @@ function Game(jugadores, modo, maxPlanetas, bolasExtra, tiempo, maxAgujeros, agu
     this.asteroides = [];
 
     // Funcionamiento
+    this.actualizarParteFija=true;
     this.mapaGenerado = false;
     this.bolasGeneradas = false;
     this.iniciado = false;
@@ -81,14 +82,10 @@ Game.prototype.start = function () {
 
 var measures = ["renderizado",
     "update",
-    "extra",
     "physicsUpdate",
     "noDisponible",
     "planetas",
-    "bolas"//,
-    // "asteroides",
-    // "bolaLibre",
-    // "orbitar"
+    "bolas"
 ];
 var valores={};
 for(var m in measures) {
@@ -119,7 +116,6 @@ Game.prototype.mainLoop = function () {
             this.update(delta / 1000);
             performance.mark("update-end");
 
-            performance.mark("extra-start");
             //Fin de partida en modo no clásico
             if (this.duracion > 0 &&
                 now - this.inicioPartida > this.duracion * 60000) {
@@ -131,9 +127,8 @@ Game.prototype.mainLoop = function () {
                 this.stopper = null;
             }
             // Blind game
-            this.blindGame-=delta;
-            if(this.blindGame<0) {
-                this.blindGame = 0;
+            if(this.blindGame > 0) {
+                this.blindGame -= delta;
             }
             // Eliminación de notas antiguas
             for (var i in Log.notas) {
@@ -143,7 +138,6 @@ Game.prototype.mainLoop = function () {
                     break;
                 }
             }
-            performance.mark("extra-end");
         }
     }
 
@@ -199,18 +193,15 @@ Game.prototype.update = function (elapsedSeconds) {
  * Actualiza la física de las bolas
  */
 Game.prototype.physicsUpdate = function (elapsedSeconds) {
-    performance.mark("planetas-start");
     // Actualizamos las colisiones de las que están orbitando,
     // planeta a planeta
     for (var i in this.planetas) {
         var planeta = this.planetas[i];
         planeta.update(elapsedSeconds);
     }
-    performance.mark("planetas-end");
 
     // Actualizamos las colisiones de las bolas
     // que no se encuentran en ningún planeta
-    performance.mark("bolas-start");
     for (i in this.bolas) {
         var bola = this.bolas[i];
 
@@ -238,7 +229,6 @@ Game.prototype.physicsUpdate = function (elapsedSeconds) {
                 bola.planetaAnt = null; // Ya no cuenta el planeta anterior (puede volver a él)
         }
     }
-    performance.mark("bolas-end");
 };
 
 /**
@@ -426,8 +416,9 @@ Game.prototype.bolaLibreUpdate = function (bola, elapsedSeconds) {
  * También tiene cierta probabilidad de desactivar una nueva órbita de forma aleatoria.
  */
 Game.prototype.noDisponiblesUpdate = function () {
-    if (Math.random() * 1000 < PROB_DESACTIVAR)
+    if (Math.random() * 1000 < PROB_DESACTIVAR) {
         this.desactivarOrbitaAleatoria();
+    }
 
     for (var i in this.planetasND) {
         this.planetasND[i].nodisponible -= 1; //Volverá a estar disponible tarde o temprano

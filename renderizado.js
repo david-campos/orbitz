@@ -17,6 +17,7 @@ for(var imagen in iconos_asteroides) {
 var transposicionY = 0;
 var prerenderizados = {};
 var puntosDebug = [];
+var siguienteRenderLento = 0;
 
 /**
  * @param {CanvasRenderingContext2D} ctx
@@ -52,7 +53,7 @@ function colorearIcono(ctx, icono, color) {
  * Pre-renderiza con una funcion de dibujo sobre un nuevo canvas y lo devuelve
  * @param {int} width ancho del canvas
  * @param {int} height alto del canvas
- * @param {function(CanvasRenderingContext2D, [Object],[Object])} funcionDibujo función para dibujar el elemento
+ * @param {function(CanvasRenderingContext2D, Object,Object)} funcionDibujo función para dibujar el elemento
  * @param param1 parametro opcional 1
  * @param param2 parametro opcional 2
  * @returns {HTMLCanvasElement}
@@ -90,16 +91,22 @@ function generarPreRenderizados(juego) {
  * @param {Game} juego
  */
 var render = function(juego) {
-    ctx.clearRect(0,0,canvas.width / glob_escala.w,canvas.height / glob_escala.h);
-
     var now = Date.now();
+
+    if(now > siguienteRenderLento) {
+        renderLento();
+        siguienteRenderLento = now + RENDERIZADO_LENTO_TIME;
+    }
+
+    // Limpiamos
+    ctx.clearRect(0,0,canvas.width/ glob_escala.w,canvas.height/ glob_escala.h);
 
     // Escalado del juego
     if(glob_escala.update) {
         glob_escala.update = false;
         ctx.scale(glob_escala.w, glob_escala.h);
-        transposicionY = (canvas.height - glob_escala.h * MAP.h) * 0.5 / glob_escala.h;
     }
+
     // Transposición para centrar el escalado
     ctx.save();
     if(glob_escala.dominaAncho && glob_escala.h < 1) {
@@ -107,20 +114,22 @@ var render = function(juego) {
     }
 
 	//Planetas
+    performance.mark("planetas-start");
     if(!juego.blindGame) {
         for (var i in juego.planetas)
             dibujarPlaneta(juego, juego.planetas[i]);
     }
+    performance.mark("planetas-end");
 
 	//Asteroides
 	for(i in juego.asteroides) {
 		var as = juego.asteroides[i];
 		ctx.drawImage(
 		    prerenderizados.asteroide,
-            as.x - prerenderizados.asteroide.width/2,
-            as.y - prerenderizados.asteroide.height/2,
-            prerenderizados.asteroide.width,
-            prerenderizados.asteroide.height);
+            (0.5 + as.x - prerenderizados.asteroide.width/2) << 0,
+            (0.5 + as.y - prerenderizados.asteroide.height/2) <<0,
+            (0.5 + prerenderizados.asteroide.width) << 0,
+            (0.5 + prerenderizados.asteroide.height) << 0);
 	}
 	
 	//Agujeros
@@ -137,6 +146,7 @@ var render = function(juego) {
     }
 	
 	//Bolas
+    performance.mark("bolas-start");
 	for(i in juego.bolas) {
 		var bola = juego.bolas[i];
 		if(!bola.viva) continue;
@@ -225,6 +235,7 @@ var render = function(juego) {
         ctx.closePath();
 		ctx.shadowBlur = 0;
 	}
+    performance.mark("bolas-end");
 
     // Puntos de debug
     for(i in puntosDebug) {
@@ -260,10 +271,32 @@ var render = function(juego) {
             }
         }
     }
-
 	ctx.restore();
+};
 
-	// A PARTIR DE AQUÍ NO HAY TRANSPOSICIÓN (SÍ ESCALADO)
+function renderLento() {
+    // Escalado del juego
+    scdCtx.clearRect(0,0,secondCanvas.width / glob_escala.w,secondCanvas.height / glob_escala.h);
+    if(glob_escala.update2) {
+        glob_escala.update2 = false;
+        scdCtx.scale(glob_escala.w, glob_escala.h);
+    }
+
+    // Transposición para centrar el escalado
+    scdCtx.save();
+    if(glob_escala.dominaAncho && glob_escala.h < 1) {
+        scdCtx.translate(0, transposicionY);
+    }
+
+    //Planetas
+    if(!juego.blindGame) {
+        for (var i in juego.planetas)
+            renderPlanetaEstatico(juego.planetas[i]);
+    }
+    scdCtx.restore();
+
+
+    // A PARTIR DE AQUÍ NO HAY TRANSPOSICIÓN (SÍ ESCALADO)
 
     // Modo de juego
     ctx.save();
@@ -283,10 +316,10 @@ var render = function(juego) {
     ctx.fillText(juego.modo, MAP.w - w - 20, 40);
     ctx.restore();
 
-	// Debug mode
-	if(glob_debugMode) {
-	    var textos = [
-	        "FPS: " + glob_fps,
+    // Debug mode
+    if(glob_debugMode) {
+        var textos = [
+            "FPS: " + glob_fps,
             "min: " + glob_fps_min
         ];
         ctx.save();
@@ -294,7 +327,7 @@ var render = function(juego) {
         ctx.fillStyle = "red";
         for(i=0;i<textos.length;i++) {
             var text = textos[i];
-	        if (text.length < 10) {
+            if (text.length < 10) {
                 for (var j = 0; j < 10 - text.length; j++)
                     text += " ";
             }
@@ -309,10 +342,10 @@ var render = function(juego) {
 
     dibujarInterfazAsteroides(juego);
 
-	//Notas
+    //Notas
     ctx.save();
     var notasSize = 20;
-	ctx.font="bold "+notasSize+"px Orbitron";
+    ctx.font="bold "+notasSize+"px Orbitron";
     var blur = 10;
     ctx.shadowColor = "#471468";
     ctx.shadowOffsetX = 0;
@@ -320,72 +353,96 @@ var render = function(juego) {
     ctx.shadowBlur = blur;
 
     for(i in Log.notas) {
-		// Create gradient
-		//var gradient=ctx.createLinearGradient(0,0,200,0);
-		//gradient.addColorStop(0.25,notas[i].color);
-		//gradient.addColorStop(0.75,"white");
-		// Fill with gradient
+        // Create gradient
+        //var gradient=ctx.createLinearGradient(0,0,200,0);
+        //gradient.addColorStop(0.25,notas[i].color);
+        //gradient.addColorStop(0.75,"white");
+        // Fill with gradient
         ctx.fillStyle=Log.notas[i].color;
-		ctx.fillText(Log.notas[i].mensaje, 20, 40 + i * notasSize * 1.2);
-	}
-	ctx.restore();
-};
+        ctx.fillText(Log.notas[i].mensaje, 20, 40 + i * notasSize * 1.2);
+    }
+    ctx.restore();
+}
 
-function dibujarPlaneta(juego, p) {
-	//Los planetas tambien tienen gradiente
-	var grd = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.rg);
-	
-	if(p.centro){
-		if(p.mayor_t_j !== null) {
-            var segundo_mayor = 0;
-            for(var idx in juego.jugadores) {
-                if(juego.jugadores[idx] !== p.mayor_t_j &&
-                    juego.jugadores[idx].tiempo > segundo_mayor) {
-                        segundo_mayor = juego.jugadores[idx].tiempo;
-                    }
-            }
-	        grd.addColorStop(0.7 * Math.min(p.mayor_t - segundo_mayor, 30) / 30 + 0.2, p.mayor_t_j.color);
-	    } else {
-            grd.addColorStop(0, "rgba(80, 200, 80, 0.2)");
-        }
-        grd.addColorStop(1,"rgba(80, 200, 80, 0.1)");
-	} else if(p.nodisponible) {
+function renderPlanetaEstatico(p) {
+    if(p.renderizado) {
+        p.rotar();
+    }
+
+    // Orbitas no estaticas
+    if(p.centro || p.inquieto || p.radioVariable) return;
+
+    //Los planetas tambien tienen gradiente
+    var grd = scdCtx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.rg);
+
+    if(p.nodisponible) {
         grd.addColorStop(0,"rgba(80, 80, 80, 0.4)");
         grd.addColorStop(1,"rgba(80, 80, 80, 0.1)");
-    } else if(p.inquieto) {
-        grd.addColorStop(0, "rgba(255, 255, 255, 0.4)");
-        grd.addColorStop(1, "rgba(0, 0, 0, 0.1)")
-    } else if(p.radioVariable) {
-        grd.addColorStop(0, "rgba(200, 45, 180, 0.2)");
-        grd.addColorStop(1, "rgba(200, 45, 180, 0.1)")
     } else {
         grd.addColorStop(0,"rgba(90, 45, 180, 0.2)");
         grd.addColorStop(1,"rgba(90, 45, 180, 0.1)");
     }
-	ctx.beginPath();
-	ctx.arc(p.x, p.y, p.rg, 0, 2*Math.PI);
-	ctx.fillStyle = grd;
-	ctx.fill();
-	ctx.closePath();
-	
-	//Centro del Planeta
-	if(glob_plt_imgs[p.n_imagen].ready) {
-		ctx.save();
-		ctx.translate(p.x, p.y);
-		ctx.rotate(p.ang);
-		p.ang = (p.ang + p.vel)%(2*Math.PI);
-		ctx.drawImage(glob_plt_imgs[p.n_imagen], -((0.5 + p.r) | 0), -((0.5 + p.r) | 0), 2*((0.5 + p.r) | 0), 2*((0.5 + p.r) | 0));
-		ctx.restore();
-	}else{
-		grd = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
-		grd.addColorStop(0,"#4A392C");
-		grd.addColorStop(1,"#12171A");
-		ctx.beginPath();
-		ctx.arc(p.x, p.y, p.r, 0, 2*Math.PI);
-		ctx.fillStyle = grd;
-		ctx.fill();
-		ctx.closePath();
-	}
+    scdCtx.beginPath();
+    scdCtx.arc(p.x, p.y, p.rg, 0, 2*Math.PI);
+    scdCtx.fillStyle = grd;
+    scdCtx.fill();
+    scdCtx.closePath();
+
+    if(p.renderizado) {
+        scdCtx.drawImage(p.renderizado, p.x -((0.5 + p.r) << 0), p.y -((0.5 + p.r) << 0));
+    }else{
+        scdCtx.beginPath();
+        scdCtx.arc(p.x, p.y, p.r, 0, 2*Math.PI);
+        scdCtx.fillStyle = "#4A392C";
+        scdCtx.fill();
+        scdCtx.closePath();
+    }
+}
+
+function dibujarPlaneta(juego, p) {
+    // Descartar los de órbita estática!
+    if(!p.centro && !p.inquieto && !p.radioVariable) return;
+
+    if (p.centro) {
+        var grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.rg);
+        if (p.mayor_t_j !== null) {
+            var segundo_mayor = 0;
+            for (var idx in juego.jugadores) {
+                if (juego.jugadores[idx] !== p.mayor_t_j &&
+                    juego.jugadores[idx].tiempo > segundo_mayor) {
+                    segundo_mayor = juego.jugadores[idx].tiempo;
+                }
+            }
+            grd.addColorStop(0.7 * Math.min(p.mayor_t - segundo_mayor, 30) / 30 + 0.2, p.mayor_t_j.color);
+        } else {
+            grd.addColorStop(0, "rgba(80, 200, 80, 0.2)");
+        }
+        grd.addColorStop(1, "rgba(80, 200, 80, 0.1)");
+    } else if (p.inquieto) {
+        grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.rg);
+        grd.addColorStop(0, "rgba(255, 255, 255, 0.4)");
+        grd.addColorStop(1, "rgba(0, 0, 0, 0.1)")
+    } else if (p.radioVariable) {
+        grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.rg);
+        grd.addColorStop(0, "rgba(200, 45, 180, 0.2)");
+        grd.addColorStop(1, "rgba(200, 45, 180, 0.1)")
+    }
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.rg, 0, 2 * Math.PI);
+    ctx.fillStyle = grd;
+    ctx.fill();
+    ctx.closePath();
+
+    //Centro del Planeta
+    if(p.renderizado) {
+        ctx.drawImage(p.renderizado, p.x -((0.5 + p.r) << 0), p.y -((0.5 + p.r) << 0));
+    }else{
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, 2*Math.PI);
+        ctx.fillStyle = "#4A392C";
+        ctx.fill();
+        ctx.closePath();
+    }
 }
 
 window.onresize = function() {
@@ -403,7 +460,9 @@ function redimensionar(width, height) {
 
     // El canvas tendrá la resolución especificada
     canvas.width = width;
+    secondCanvas.width = width;
     canvas.height = height;
+    secondCanvas.height = height;
 
     // Escalamos manteniendo la proporción
     var escalaAncho = width / MAP.w;
@@ -413,8 +472,10 @@ function redimensionar(width, height) {
         w: escalaAncho>escalaAlto? escalaAlto: escalaAncho,
         h: escalaAlto>=escalaAncho? escalaAncho: escalaAlto,
         dominaAncho: escalaAlto>=escalaAncho,
-        update: true
+        update: true,
+        update2: true
     };
+    transposicionY = (canvas.height - glob_escala.h * MAP.h) * 0.5 / glob_escala.h;
 }
 
 function debugPunto(x, y, color) {
