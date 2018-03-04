@@ -18,6 +18,8 @@ function initMenu() {
     sonidoMenu = document.getElementById('sonido');
 
     const tablaJugadores = document.getElementById("tabla-jugadores");
+    const textsTime = ['1 minute', '2 minutes', '5 minutes', 'Infinite time'];
+    const valuesTime = [1, 2, 5, -1];
 
     var jugadoresN = 2;
     var modo;
@@ -50,8 +52,9 @@ function initMenu() {
             modos.style.display = 'none';
             interfaz.style.display = 'block';
 
-            time.innerText = "Infinite time";
-            time.setAttribute("data-time", "0");
+            time.innerText = textsTime[textsTime.length-1];
+            time.setAttribute("data-time", (textsTime.length-1).toString());
+            tiempo = valuesTime[textsTime.length-1];
 
             switch (this.getAttribute("data-modo")) {
                 case "Clasico":
@@ -61,9 +64,9 @@ function initMenu() {
                     modo = MODOS.INSTINTO;
                     break;
                 case "Centro":
-                    time.innerText = "2 minutes";
-                    time.setAttribute("data-time", "1");
-
+                    time.innerText = time.innerText = textsTime[0];
+                    time.setAttribute("data-time", "0");
+                    tiempo = valuesTime[0];
                     modo = MODOS.CENTRO;
                     break;
             }
@@ -154,20 +157,11 @@ function initMenu() {
     };
 
     time.onclick = function () {
-        const textsTime = ['Infinite time', '2 minutes', '5 minutes'];
-        const valuesTime = [-1, 2, 5];
-
-        let state = time.getAttribute('data-time');
-        state = (state + 1) % textsTime.length;
-
-        if (modo === MODOS.CENTRO && state === 0) {
-            ++state;
-        }
-
+        let state = parseInt(time.getAttribute('data-time'));
+        state = (state + 1) % (textsTime.length - (modo === MODOS.CENTRO?1:0));
+        console.log("to", state);
         tiempo = valuesTime[state];
-
-        time.setAttribute('data-time', state);
-
+        time.setAttribute('data-time', state.toString());
         time.innerHTML = textsTime[state];
     };
 
