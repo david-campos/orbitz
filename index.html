@@ -102,7 +102,7 @@
                             <td><span class="key" data-keyCode="13">Enter key</span></td>
                             <td><span class="key" data-keyCode="8">Backspace/delete key</span></td>
                         </tr>
-                        <tr id="player_3" style="opacity:0">
+                        <tr id="player_3" style="display: none;">
                             <td>
                                 <svg width="20" height="20">
                                     <rect width="20" height="20" rx="2" ry="2"></rect>
@@ -110,7 +110,7 @@
                             <td><span class="key" data-keyCode="81">Q key</span></td>
                             <td><span class="key" data-keyCode="65">A key</span></td>
                         </tr>
-                        <tr id="player_4" style="opacity:0">
+                        <tr id="player_4" style="display: none">
                             <td>
                                 <svg width="20" height="20">
                                     <rect width="20" height="20" rx="2" ry="2"></rect>
@@ -139,7 +139,7 @@
             </div>
         </div>
 
-        <a class="btn btn-primary text-white mt-3 goBack">Go back</a>
+        <a class="btn btn-outline-primary text-white mt-3 goBack">Go back</a>
     </div>
 
     <!-- Creditos -->
@@ -230,11 +230,13 @@
 
 <!-- Reinicio -->
 <div  style="display: none" id="restartScreen">
-    <div class="card text-white bg-primary restart-card">
-        <div class="card-header"><h4 class="card-title">Restart?</h4></div>
-        <div class="card-body">
-            <a class="btn btn-outline-primary btn-lg btn-block btn_start">Restart</a>
-            <a class="btn btn-outline-primary btn-lg btn-block btn_start">Main menu</a>
+    <div class="withCursor">
+        <div class="card text-white bg-primary restart-card">
+            <div class="card-header"><h4 class="card-title">Restart?</h4></div>
+            <div class="card-body">
+                <a class="btn btn-outline-primary btn-lg btn-block btn_start">Restart</a>
+                <a class="btn btn-outline-primary btn-lg btn-block btn_start">Main menu</a>
+            </div>
         </div>
     </div>
 </div>

@@ -120,13 +120,13 @@ function initMenu() {
         for (let i = 1; i <= 4; ++i) {
             const mostrarJugador = i <= jugadoresN;
             var jug = document.getElementById('player_' + i);
-            if(mostrarJugador && jug.style.opacity === "0") {
+            if(mostrarJugador && jug.style.display === "none") {
                 jug.getElementsByTagName("rect")[0].style.fill = coloresDisponibles.shift();
-                jug.style.opacity = "1";
+                jug.style.display = "";
             }
-            if(!mostrarJugador && jug.style.opacity !== "0") {
+            if(!mostrarJugador && jug.style.display !== "none") {
                 coloresDisponibles.push(jug.getElementsByTagName("rect")[0].style.fill);
-                jug.style.opacity = "0";
+                jug.style.display = "none";
             }
         }
     }
@@ -181,14 +181,14 @@ function initMenu() {
     ];
     const rectsJugadores = tablaJugadores.getElementsByTagName("rect");
     Array.prototype.filter.call(rectsJugadores, function(rect){
-        if(rect.parentElement.parentElement.parentElement.style.opacity !== "0") {
+        if(rect.parentElement.parentElement.parentElement.style.display !== "none") {
             var idx = Math.floor(Math.random() * coloresDisponibles.length);
             rect.style.fill = coloresDisponibles.splice(idx, 1)[0];
-            rect.onclick = function () {
-                coloresDisponibles.push(rect.style.fill); // Lo introducimos de último
-                this.style.fill = coloresDisponibles.shift(); // Y cogemos el primero
-            };
         }
+        rect.onclick = function () {
+            coloresDisponibles.push(rect.style.fill); // Lo introducimos de último
+            this.style.fill = coloresDisponibles.shift(); // Y cogemos el primero
+        };
     });
 
     // Empezar juego (ver main.js)

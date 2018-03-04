@@ -34,7 +34,8 @@ var ast_tipos = [["Invincible", 40],
     ["Reproductive", 40],
     ["Changing roles", 20],
     ["Stop", 5],
-    ["Planet lover", 80]];
+    ["Planet lover", 80],
+    ["A Present", 50]];
 var ast_prob_t = 0;
 for (var i in ast_tipos) {
     ast_prob_t += parseInt(ast_tipos[i][1]);
@@ -133,6 +134,11 @@ Asteroide.prototype.hacerEfecto = function (bola) {
             break;
         case 15: // Planet lover
             bola.planetLover = this.duracion + 1000;
+            break;
+        case 16: // A Present
+            if(juego) {
+                juego.generarBola(bola.jugador, []);
+            }
             break;
         default:
             console.log("Asteroide tipo [", this.tipo, "] DESCONOCIDO.", this);
