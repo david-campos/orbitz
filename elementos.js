@@ -35,7 +35,10 @@ var ast_tipos = [["Invincible", 40],
     ["Changing roles", 20],
     ["Stop", 5],
     ["Planet lover", 80],
-    ["A Present", 50]];
+    ["A Present", 50],
+    ["Blind", 40],
+    ["Speed down x 2", 60],
+    ["Another chance", 50]];
 var ast_prob_t = 0;
 for (var i in ast_tipos) {
     ast_prob_t += parseInt(ast_tipos[i][1]);
@@ -74,9 +77,13 @@ Asteroide.prototype.hacerEfecto = function (bola) {
             break;
         case 1:
             bola.vR *= 1.75;
+            bola.v.x *= 1.75;
+            bola.v.y *= 1.75;
             break;
         case 2:
             bola.vR *= 0.5;
+            bola.v.x *= 0.5;
+            bola.v.y *= 0.5;
             break;
         case 3:
             bola.salirOrb();
@@ -89,6 +96,8 @@ Asteroide.prototype.hacerEfecto = function (bola) {
             break;
         case 6:
             bola.vR *= -1;
+            bola.v.x *= -1;
+            bola.v.y *= -1;
             break;
         case 7:
             bola.fortuna = true;
@@ -100,6 +109,8 @@ Asteroide.prototype.hacerEfecto = function (bola) {
             break;
         case 9:
             bola.vR *= 1.5;
+            bola.v.x *= 1.5;
+            bola.v.y *= 1.5;
             break;
         case 10:
             bola.salvado = true;
@@ -138,6 +149,21 @@ Asteroide.prototype.hacerEfecto = function (bola) {
         case 16: // A Present
             if(juego) {
                 juego.generarBola(bola.jugador, []);
+            }
+            break;
+        case 17: // Blind
+            if(juego) {
+                juego.blindGame = this.duracion;
+            }
+            break;
+        case 18: // Speed down x 2
+            bola.vR *= 0.25;
+            bola.v.x *= 0.25;
+            bola.v.y *= 0.25;
+            break;
+        case 19: // Another chance
+            if(juego) {
+                juego.generarBola(null, []);
             }
             break;
         default:

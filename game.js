@@ -61,6 +61,7 @@ function Game(jugadores, modo, maxPlanetas, bolasExtra, tiempo, maxAgujeros, agu
     this.then = 0; // Para calcular el tiempo entre frames
     this.stopEffect = 0; // Para el asteroide Stop!
     this.stopper = null;
+    this.blindGame = 0; // Para el asteroide blind
 }
 
 /**
@@ -107,6 +108,11 @@ Game.prototype.mainLoop = function () {
             if (now > this.stopEffect) {
                 this.stopEffect = 0;
                 this.stopper = null;
+            }
+            // Blind game
+            this.blindGame-=delta;
+            if(this.blindGame<0) {
+                this.blindGame = 0;
             }
             // Eliminación de notas antiguas
             for (var i in Log.notas) {

@@ -107,8 +107,10 @@ var render = function(juego) {
     }
 
 	//Planetas
-	for(var i in juego.planetas)
-		dibujarPlaneta(juego, juego.planetas[i]);
+    if(!juego.blindGame) {
+        for (var i in juego.planetas)
+            dibujarPlaneta(juego, juego.planetas[i]);
+    }
 
 	//Asteroides
 	for(i in juego.asteroides) {
@@ -122,15 +124,17 @@ var render = function(juego) {
 	}
 	
 	//Agujeros
-	for(i in juego.agujeros) {
-		var ag = juego.agujeros[i];
-		ctx.save();
-		ctx.translate(ag.x, ag.y);
-		ctx.rotate(ag.ang);
-		ag.ang = (ag.ang + 0.002)%(2*Math.PI);
-		ctx.drawImage(imgAgujero, -ag.r, -ag.r, 2*ag.r, 2*ag.r);
-		ctx.restore();
-	}
+    if(!juego.blindGame) {
+        for (i in juego.agujeros) {
+            var ag = juego.agujeros[i];
+            ctx.save();
+            ctx.translate(ag.x, ag.y);
+            ctx.rotate(ag.ang);
+            ag.ang = (ag.ang + 0.002) % (2 * Math.PI);
+            ctx.drawImage(imgAgujero, -ag.r, -ag.r, 2 * ag.r, 2 * ag.r);
+            ctx.restore();
+        }
+    }
 	
 	//Bolas
 	for(i in juego.bolas) {
