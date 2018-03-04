@@ -21,11 +21,11 @@ const ASTEROIDES_MAX = 20;
 
 // PROBS
 /** @type {number} Probabilidad (entre mil) para cada frame de generar un asteroide*/
-const PROB_ASTEROIDE = 0.07;
+const PROB_ASTEROIDE = 0.08;
 /** @type {number} Probabilidad (entre mil) para cada frame de desactivar una órbita*/
 const PROB_DESACTIVAR = 1;
 /** @type {number} Probabilidad para cada planeta pequeño de ser un planeta inquieto*/
-const PROB_INQUIETO = 0.002;
+const PROB_INQUIETO = 0.004;
 
 
 // LEGACY

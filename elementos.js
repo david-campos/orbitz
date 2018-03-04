@@ -19,26 +19,26 @@ Jugador.prototype.asignarBola = function () {
 /**
  * @type {[[String, Number]]}
  */
-var ast_tipos = [["Invincible", 40],
-    ["Speed up x 2", 60],
-    ["Speed down", 80],
-    ["Out of the orbit!", 100],
-    ["Invisible", 120],
-    ["Useless asteroid", 140],
-    ["Rebound!", 100],
-    ["Lucky", 60],
-    ["Own gravity", 60],
-    ["Speed up", 120],
-    ["Lifesaver", 140],
-    ["Transport", 120],
-    ["Reproductive", 40],
-    ["Changing roles", 20],
+var ast_tipos = [["Invincible", 20],
+    ["Speed up x 2", 30],
+    ["Speed down", 40],
+    ["Out of the orbit!", 150],
+    ["Invisible", 180],
+    ["Useless asteroid", 210],
+    ["Rebound!", 150],
+    ["Lucky", 30],
+    ["Own gravity", 30],
+    ["Speed up", 180],
+    ["Lifesaver", 210],
+    ["Transport", 180],
+    ["Reproductive", 20],
+    ["Changing roles", 10],
     ["Stop", 5],
-    ["Planet lover", 80],
-    ["A Present", 50],
-    ["Blind", 40],
-    ["Speed down x 2", 60],
-    ["Another chance", 50]];
+    ["Planet lover", 40],
+    ["A Present", 25],
+    ["Blind", 10],
+    ["Speed down x 2", 30],
+    ["Another chance", 20]];
 var ast_prob_t = 0;
 for (var i in ast_tipos) {
     ast_prob_t += parseInt(ast_tipos[i][1]);
