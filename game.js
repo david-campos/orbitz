@@ -108,13 +108,10 @@ Game.prototype.mainLoop = function () {
     }
 
     if (!this.pausado) {
-        performance.mark("renderizado-start");
         render(this);
-        performance.mark("renderizado-end");
         if (!this.finalizado) {
-            performance.mark("update-start");
-            this.update(delta / 1000);
-            performance.mark("update-end");
+            this.physicsUpdate(delta/1000);
+            this.noDisponiblesUpdate();
 
             //Fin de partida en modo no clásico
             if (this.duracion > 0 &&
@@ -141,30 +138,6 @@ Game.prototype.mainLoop = function () {
         }
     }
 
-    for(i in measures) {
-        performance.measure(
-            measures[i],
-            measures[i]+"-start",
-            measures[i]+"-end"
-        );
-    }
-
-    var entries = performance.getEntriesByType("measure");
-    for(var e in entries) {
-        valores[entries[e].name].push(entries[e].duration);
-        if(valores[entries[e].name].length === 100) {
-            var suma = 0;
-            for(var v in valores[entries[e].name]) {
-                suma += valores[entries[e].name][v];
-            }
-            console.log(entries[e].name, suma/100);
-            valores[entries[e].name] = [];
-        }
-    }
-
-    performance.clearMarks();
-    performance.clearMeasures();
-
     this.then = now;
     // Request to do this again ASAP
     var self = this;
@@ -172,21 +145,6 @@ Game.prototype.mainLoop = function () {
         requestAnimationFrame(function () {
             self.mainLoop()
         });
-};
-
-/**
- * Produce la actualización del juego, es llamada una vez por frame
- * @param {Number} elapsedSeconds tiempo pasado desde el último frame
- */
-Game.prototype.update = function (elapsedSeconds) {
-    if (elapsedSeconds === 0) return; // No válido
-
-    performance.mark("physicsUpdate-start");
-    this.physicsUpdate(elapsedSeconds);
-    performance.mark("physicsUpdate-end");
-    performance.mark("noDisponible-start");
-    this.noDisponiblesUpdate();
-    performance.mark("noDisponible-end");
 };
 
 /**

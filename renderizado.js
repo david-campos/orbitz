@@ -114,12 +114,10 @@ var render = function(juego) {
     }
 
 	//Planetas
-    performance.mark("planetas-start");
     if(!juego.blindGame) {
         for (var i in juego.planetas)
             dibujarPlaneta(juego, juego.planetas[i]);
     }
-    performance.mark("planetas-end");
 
 	//Asteroides
 	for(i in juego.asteroides) {
@@ -146,7 +144,6 @@ var render = function(juego) {
     }
 	
 	//Bolas
-    performance.mark("bolas-start");
 	for(i in juego.bolas) {
 		var bola = juego.bolas[i];
 		if(!bola.viva) continue;
@@ -235,7 +232,6 @@ var render = function(juego) {
         ctx.closePath();
 		ctx.shadowBlur = 0;
 	}
-    performance.mark("bolas-end");
 
     // Puntos de debug
     for(i in puntosDebug) {
@@ -297,24 +293,23 @@ function renderLento() {
 
 
     // A PARTIR DE AQUÍ NO HAY TRANSPOSICIÓN (SÍ ESCALADO)
-
     // Modo de juego
-    ctx.save();
-    ctx.font="bold 20px Orbitron";
-    ctx.shadowColor = "#471468";
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 0;
-    ctx.shadowBlur = 10;
+    scdCtx.save();
+    scdCtx.font="bold 20px Orbitron";
+    scdCtx.shadowColor = "#471468";
+    scdCtx.shadowOffsetX = 0;
+    scdCtx.shadowOffsetY = 0;
+    scdCtx.shadowBlur = 10;
 
     // Create gradient
-    var gradient=ctx.createLinearGradient(0,0,200,0);
+    var gradient=scdCtx.createLinearGradient(0,0,200,0);
     gradient.addColorStop(0.25,"gray");
     gradient.addColorStop(0.75,"white");
     // Fill with gradient
-    ctx.fillStyle=gradient;
-    var w = ctx.measureText(juego.modo).width;
-    ctx.fillText(juego.modo, MAP.w - w - 20, 40);
-    ctx.restore();
+    scdCtx.fillStyle=gradient;
+    var w = scdCtx.measureText(juego.modo).width;
+    scdCtx.fillText(juego.modo, MAP.w - w - 20, 40);
+    scdCtx.restore();
 
     // Debug mode
     if(glob_debugMode) {
@@ -322,35 +317,35 @@ function renderLento() {
             "FPS: " + glob_fps,
             "min: " + glob_fps_min
         ];
-        ctx.save();
-        ctx.font = "bold 30px \"Courier New\"";
-        ctx.fillStyle = "red";
+        scdCtx.save();
+        scdCtx.font = "bold 30px \"Courier New\"";
+        scdCtx.fillStyle = "red";
         for(i=0;i<textos.length;i++) {
             var text = textos[i];
             if (text.length < 10) {
                 for (var j = 0; j < 10 - text.length; j++)
                     text += " ";
             }
-            var width = ctx.measureText(text).width;
-            ctx.save();
-            ctx.fillText(text, MAP.w - width - w, 40);
-            ctx.restore();
-            ctx.translate(0, 30);
+            var width = scdCtx.measureText(text).width;
+            scdCtx.save();
+            scdCtx.fillText(text, MAP.w - width - w, 40);
+            scdCtx.restore();
+            scdCtx.translate(0, 30);
         }
-        ctx.restore();
+        scdCtx.restore();
     }
 
     dibujarInterfazAsteroides(juego);
 
     //Notas
-    ctx.save();
+    scdCtx.save();
     var notasSize = 20;
-    ctx.font="bold "+notasSize+"px Orbitron";
+    scdCtx.font="bold "+notasSize+"px Orbitron";
     var blur = 10;
-    ctx.shadowColor = "#471468";
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 0;
-    ctx.shadowBlur = blur;
+    scdCtx.shadowColor = "#471468";
+    scdCtx.shadowOffsetX = 0;
+    scdCtx.shadowOffsetY = 0;
+    scdCtx.shadowBlur = blur;
 
     for(i in Log.notas) {
         // Create gradient
@@ -358,10 +353,10 @@ function renderLento() {
         //gradient.addColorStop(0.25,notas[i].color);
         //gradient.addColorStop(0.75,"white");
         // Fill with gradient
-        ctx.fillStyle=Log.notas[i].color;
-        ctx.fillText(Log.notas[i].mensaje, 20, 40 + i * notasSize * 1.2);
+        scdCtx.fillStyle=Log.notas[i].color;
+        scdCtx.fillText(Log.notas[i].mensaje, 20, 40 + i * notasSize * 1.2);
     }
-    ctx.restore();
+    scdCtx.restore();
 }
 
 function renderPlanetaEstatico(p) {
