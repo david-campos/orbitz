@@ -16,10 +16,12 @@ const RADIO_AGUJERO_MIN = 50;
 const RADIO_AGUJERO_MAX = 70;
 /** @type {number} Velocidad lineal mínima a alcanzar para poder salir de órbita voluntariamente */
 const VEL_LIN_MIN = 200;
+/** @type {int} Número máximo de asteroides generados aleatoriamente simultáneos en un juego */
+const ASTEROIDES_MAX = 20;
 
 // PROBS
 /** @type {number} Probabilidad (entre mil) para cada frame de generar un asteroide*/
-const PROB_ASTEROIDE = 0.5;
+const PROB_ASTEROIDE = 0.07;
 /** @type {number} Probabilidad (entre mil) para cada frame de desactivar una órbita*/
 const PROB_DESACTIVAR = 1;
 /** @type {number} Probabilidad para cada planeta pequeño de ser un planeta inquieto*/

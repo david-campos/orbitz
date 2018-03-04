@@ -11,11 +11,11 @@
  */
 function Game(jugadores, modo, maxPlanetas, bolasExtra, tiempo, maxAgujeros, agujerosInofensivos, bolasXjugador) {
     // Configuración del juego
-    this.modo = (modo!==undefined && globf_esModo(modo))?modo:MODOS.CLASICO;
-    this.maxPlanetas = (maxPlanetas>0)?maxPlanetas:jugadores.length+bolasExtra;
+    this.modo = (modo !== undefined && globf_esModo(modo)) ? modo : MODOS.CLASICO;
+    this.maxPlanetas = (maxPlanetas > 0) ? maxPlanetas : jugadores.length + bolasExtra;
     this.numBolasExtra = bolasExtra;
-    this.bolasXjugador = (bolasXjugador&&bolasXjugador>0)?bolasXjugador:1;
-    this.maxAgujeros = maxAgujeros>0?maxAgujeros:0;
+    this.bolasXjugador = (bolasXjugador && bolasXjugador > 0) ? bolasXjugador : 1;
+    this.maxAgujeros = maxAgujeros > 0 ? maxAgujeros : 0;
     this.duracion = tiempo;
     this.agujerosInofensivos = agujerosInofensivos;
     /**
@@ -57,14 +57,16 @@ function Game(jugadores, modo, maxPlanetas, bolasExtra, tiempo, maxAgujeros, agu
     this.pausado = false;
     this.finalizado = false;
     this.apagado = false;
-    this.inicioPartida=0; // Guarda el momento de inicio de la partida
-    this.then=0; // Para calcular el tiempo entre frames
+    this.inicioPartida = 0; // Guarda el momento de inicio de la partida
+    this.then = 0; // Para calcular el tiempo entre frames
+    this.stopEffect = 0; // Para el asteroide Stop!
+    this.stopper = null;
 }
 
 /**
  * Inicia el juego
  */
-Game.prototype.start = function() {
+Game.prototype.start = function () {
     this.generarMapa();
     this.generarBolas();
     generarPreRenderizados(juego);
@@ -79,27 +81,32 @@ Game.prototype.start = function() {
 /**
  * Bucle principal del juego
  */
-Game.prototype.mainLoop = function() {
+Game.prototype.mainLoop = function () {
     var now = Date.now();
     var delta = now - this.then;
 
-    if(delta === 0) {
+    if (delta === 0) {
         delta = 1;
         console.log("delta=0\n");
     } else {
-        glob_fps = Math.round(0.6 *glob_fps + 400/delta);
-        glob_fps_min = (glob_fps<glob_fps_min?glob_fps:glob_fps_min);
+        glob_fps = Math.round(0.6 * glob_fps + 400 / delta);
+        glob_fps_min = (glob_fps < glob_fps_min ? glob_fps : glob_fps_min);
     }
 
-    if(!this.pausado) {
+    if (!this.pausado) {
         render(this);
-        if(!this.finalizado) {
+        if (!this.finalizado) {
             this.update(delta / 1000);
 
             //Fin de partida en modo no clásico
             if (this.duracion > 0 &&
                 now - this.inicioPartida > this.duracion * 60000) {
                 this.finalizar(null);
+            }
+            // Stop effect
+            if (now > this.stopEffect) {
+                this.stopEffect = 0;
+                this.stopper = null;
             }
             // Eliminación de notas antiguas
             for (var i in Log.notas) {
@@ -115,16 +122,18 @@ Game.prototype.mainLoop = function() {
     this.then = now;
     // Request to do this again ASAP
     var self = this;
-    if(!this.apagado)
-        requestAnimationFrame(function(){self.mainLoop()});
+    if (!this.apagado)
+        requestAnimationFrame(function () {
+            self.mainLoop()
+        });
 };
 
 /**
  * Produce la actualización del juego, es llamada una vez por frame
  * @param {Number} elapsedSeconds tiempo pasado desde el último frame
  */
-Game.prototype.update = function(elapsedSeconds) {
-    if(elapsedSeconds === 0) return; // No válido
+Game.prototype.update = function (elapsedSeconds) {
+    if (elapsedSeconds === 0) return; // No válido
 
     this.physicsUpdate(elapsedSeconds);
     this.noDisponiblesUpdate();
@@ -133,40 +142,40 @@ Game.prototype.update = function(elapsedSeconds) {
 /**
  * Actualiza la física de las bolas
  */
-Game.prototype.physicsUpdate = function(elapsedSeconds) {
+Game.prototype.physicsUpdate = function (elapsedSeconds) {
     // Actualizamos las colisiones de las que están orbitando,
     // planeta a planeta
-    for(var i in this.planetas) {
+    for (var i in this.planetas) {
         var planeta = this.planetas[i];
         planeta.update(elapsedSeconds);
     }
 
     // Actualizamos las colisiones de las bolas
     // que no se encuentran en ningún planeta
-    for(i in this.bolas) {
+    for (i in this.bolas) {
         var bola = this.bolas[i];
 
         this.actualizacionAsteroides(bola, elapsedSeconds);
 
-        if(bola.planeta || !bola.viva) continue;
+        if (bola.planeta || !bola.viva) continue;
 
         bola.anterior_pos = {x: bola.x, y: bola.y};
         this.bolaLibreUpdate(bola, elapsedSeconds);
-        if(!bola.viva) {
+        if (!bola.viva) {
             // Si se la ha tragado un agujero negro
             continue;
         }
 
         this.bolaColisionBordes(bola, elapsedSeconds);
-        if(!bola.viva) {
+        if (!bola.viva) {
             // Si ha caído fuera del campo
             continue;
         }
 
         this.orbitarPlanetaQuizas(bola);
 
-        if(bola.planetaAnt) {
-            if(moduloVector(bola.x - bola.planetaAnt.x, bola.y-bola.planetaAnt.y) > bola.planetaAnt.rg + RADIO_BOLAS)
+        if (bola.planetaAnt) {
+            if (moduloVector(bola.x - bola.planetaAnt.x, bola.y - bola.planetaAnt.y) > bola.planetaAnt.rg + RADIO_BOLAS)
                 bola.planetaAnt = null; // Ya no cuenta el planeta anterior (puede volver a él)
         }
     }
@@ -178,15 +187,15 @@ Game.prototype.physicsUpdate = function(elapsedSeconds) {
  * @param {Bola} bola
  * @param {Number} elapsedSeconds segundos desde el último frame
  */
-Game.prototype.bolaColisionBordes = function(bola, elapsedSeconds) {
-    if(bola.x < 0 || bola.x > MAP.w) {
+Game.prototype.bolaColisionBordes = function (bola, elapsedSeconds) {
+    if (bola.x < 0 || bola.x > MAP.w) {
         bola.v.x *= -1;
         bola.x += bola.v.x * elapsedSeconds; // Previene que se atasque allí
         bola.planetaAnt = null; // Ya no cuenta el planeta anterior (puede volver a él)
         reproducir(sonidos.pong2);
         bola.damage(this, "Dead (out of bounds)");
     }
-    if(bola.y < 0 || bola.y > MAP.h) {
+    if (bola.y < 0 || bola.y > MAP.h) {
         bola.v.y *= -1;
         bola.y += bola.v.y * elapsedSeconds; // Previene el atasco ahí
         bola.planetaAnt = null; // Ya no cuenta el planeta anterior (puede volver a él)
@@ -200,10 +209,10 @@ Game.prototype.bolaColisionBordes = function(bola, elapsedSeconds) {
  * si lo está y tiene que orbitarlo, la ancla al planeta.
  * @param {Bola} bola
  */
-Game.prototype.orbitarPlanetaQuizas = function(bola) {
+Game.prototype.orbitarPlanetaQuizas = function (bola) {
     var planet = this.planetaParaOrbitar(bola);
     //Cuando toca por primera vez una órbita
-    if( (!bola.jugador || !keysDown[bola.jugador.controlId]) && planet && !bola.planeta) {
+    if ((!bola.jugador || !keysDown[bola.jugador.controlId]) && planet && !bola.planeta) {
         bola.planeta = planet;
         planet.bolas.push(bola);
         // Vector u que va del planeta a la bola
@@ -212,10 +221,10 @@ Game.prototype.orbitarPlanetaQuizas = function(bola) {
         // El angulo es el agumento del vector u
         bola.ang = Math.atan2(uy, ux);
         // La velocidad angular tendrá como valor la velocidad lineal entre el radio
-        bola.vR = Math.sqrt(bola.v.x*bola.v.x+bola.v.y*bola.v.y) / planet.rg;
+        bola.vR = Math.sqrt(bola.v.x * bola.v.x + bola.v.y * bola.v.y) / planet.rg;
         // El sigo será el de la componente en la tercera dimensión
         // de la multiplicación vectorial de u y la velocidad
-        if(ux*bola.v.y-uy*bola.v.x < 0) bola.vR *= -1;
+        if (ux * bola.v.y - uy * bola.v.x < 0) bola.vR *= -1;
         //Sonido de entrar
         reproducir(sonidos.entrada);
     }
@@ -224,40 +233,41 @@ Game.prototype.orbitarPlanetaQuizas = function(bola) {
 /**
  * Realiza algunas actualizaciones de los asteroides: recogida, actualización de habilidades, generación
  */
-Game.prototype.actualizacionAsteroides = function(bola, elapsedSeconds) {
-    for(var i in this.asteroides) {
+Game.prototype.actualizacionAsteroides = function (bola, elapsedSeconds) {
+    for (var i in this.asteroides) {
         var as = this.asteroides[i];
-        if( moduloVector(bola.x - as.x, bola.y - as.y) < bola.r + 5) {
+        if (moduloVector(bola.x - as.x, bola.y - as.y) < bola.r + 5) {
             as.hacerEfecto(bola);
             this.asteroides.splice(parseInt(i), 1);
         }
     }
-    if(bola.invencible)
-    {
-        bola.invencibleTime -=  elapsedSeconds * 1000;
-        if(bola.invencibleTime < 0)
+    if (bola.invencible) {
+        bola.invencibleTime -= elapsedSeconds * 1000;
+        if (bola.invencibleTime < 0)
             bola.invencible = false;
     }
-    if(bola.invisible)
-    {
-        bola.invisibleTime -= elapsedSeconds*1000;
-        if(bola.invisibleTime < 0)
+    if (bola.invisible) {
+        bola.invisibleTime -= elapsedSeconds * 1000;
+        if (bola.invisibleTime < 0)
             bola.invisible = false;
     }
-    if(bola.fortuna)
-    {
-        bola.fortunaTime -= elapsedSeconds*1000;
-        if(bola.fortunaTime < 0)
+    if (bola.fortuna) {
+        bola.fortunaTime -= elapsedSeconds * 1000;
+        if (bola.fortunaTime < 0)
             bola.fortuna = false;
     }
-    if(bola.gravedad)
-    {
-        bola.gravedadTime -= elapsedSeconds*1000;
-        if(bola.gravedadTime < 0)
+    if (bola.gravedad) {
+        bola.gravedadTime -= elapsedSeconds * 1000;
+        if (bola.gravedadTime < 0)
             bola.gravedad = false;
     }
+    if(bola.planetLover) {
+        bola.planetLover -= elapsedSeconds * 1000;
+        if(bola.planetLover < 0)
+            bola.planetLover = 0;
+    }
 
-    if(Math.random() * 1000 < PROB_ASTEROIDE)
+    if (this.asteroides.length < ASTEROIDES_MAX && Math.random() * 1000 < PROB_ASTEROIDE)
         this.asteroides.push(globf_generarAsteroide(this));
 };
 
@@ -266,8 +276,8 @@ Game.prototype.actualizacionAsteroides = function(bola, elapsedSeconds) {
  * entre frames de la bola. Si no hay ninguno devuelve null.
  * @param {Bola} bola la bola que se ha desplazado
  */
-Game.prototype.planetaParaOrbitar = function(bola) {
-    for(var i in this.planetas) {
+Game.prototype.planetaParaOrbitar = function (bola) {
+    for (var i in this.planetas) {
         var p = this.planetas[i];
         if ((p.nodisponible && !bola.gravedad) || bola.planetaAnt === p)
             continue;
@@ -285,17 +295,35 @@ Game.prototype.planetaParaOrbitar = function(bola) {
  * @param bola
  * @param elapsedSeconds
  */
-Game.prototype.bolaLibreUpdate = function(bola, elapsedSeconds) {
+Game.prototype.bolaLibreUpdate = function (bola, elapsedSeconds) {
+    if(bola.planetLover) {
+        var min = 0;
+        var minDist = Infinity;
+        for(var p in this.planetas) {
+            if(this.planetas[p] !== bola.planetaRechazado) {
+                var distancia = moduloVector(bola.x - this.planetas[p].x, bola.y - this.planetas[p].y);
+                if (distancia < minDist) {
+                    min = p;
+                    minDist = distancia;
+                }
+            }
+        }
+        // Nos atraemos hacia él
+        var v = moduloVector(bola.v.x, bola.v.y);
+        bola.v.x += elapsedSeconds*v*(this.planetas[min].x - bola.x)/minDist;
+        bola.v.y += elapsedSeconds*v*(this.planetas[min].y - bola.y)/minDist;
+    }
+
     bola.x += bola.v.x * elapsedSeconds;
     bola.y += bola.v.y * elapsedSeconds;
 
-    if(!bola.noTragar) {
+    if (!bola.noTragar) {
         // Comparamos su distancia con todos los agujeros negros existentes
-        for(var i in this.agujeros) {
+        for (var i in this.agujeros) {
             var ag = this.agujeros[i];
             var d = menorDistanciaPS(bola.anterior_pos, bola, ag);
             // ag.r te atrae, ag.c te traga
-            if(d <= ag.r) {
+            if (d <= ag.r) {
                 if (!this.agujerosInofensivos && d <= ag.c) {
                     if (bola.transportado) {
                         // Si tiene el teletransporte la teletransportamos
@@ -314,7 +342,7 @@ Game.prototype.bolaLibreUpdate = function(bola, elapsedSeconds) {
                         return; // Siguiente bola, esta c'est fini.
                     }
                 } else {
-                    var v = {'x': (ag.x - bola.x), 'y': (ag.y - bola.y)};
+                    v = {'x': (ag.x - bola.x), 'y': (ag.y - bola.y)};
                     v.x *= elapsedSeconds * ag.a / moduloVector(v.x, v.y);
                     v.y *= elapsedSeconds * ag.a / moduloVector(v.x, v.y);
                     bola.v.x += v.x;
@@ -327,7 +355,7 @@ Game.prototype.bolaLibreUpdate = function(bola, elapsedSeconds) {
     } else {
         ag = bola.noTragar;
         d = menorDistanciaPS(bola.anterior_pos, bola, ag);
-        if(d > ag.r) {
+        if (d > ag.r) {
             bola.noTragar = null;
         }
     }
@@ -337,13 +365,13 @@ Game.prototype.bolaLibreUpdate = function(bola, elapsedSeconds) {
  * Actualiza los planetas que habían sido desactivados (no disponibles), una vez por frame.
  * También tiene cierta probabilidad de desactivar una nueva órbita de forma aleatoria.
  */
-Game.prototype.noDisponiblesUpdate = function() {
-    if(Math.random() * 1000 < PROB_DESACTIVAR)
+Game.prototype.noDisponiblesUpdate = function () {
+    if (Math.random() * 1000 < PROB_DESACTIVAR)
         this.desactivarOrbitaAleatoria();
 
-    for(var i in this.planetasND) {
+    for (var i in this.planetasND) {
         this.planetasND[i].nodisponible -= 1; //Volverá a estar disponible tarde o temprano
-        if(this.planetasND[i].nodisponible < 1) {
+        if (this.planetasND[i].nodisponible < 1) {
             this.planetasND[i].nodisponible = 0;
             this.planetasND.splice(parseInt(i), 0); // Lo eliminamos, ya está disponible de nuevo
         }
@@ -353,9 +381,9 @@ Game.prototype.noDisponiblesUpdate = function() {
 /**
  * Desactiva la órbita de un planeta cualquiera que esté activo
  */
-Game.prototype.desactivarOrbitaAleatoria = function() {
+Game.prototype.desactivarOrbitaAleatoria = function () {
     var i = Math.floor(Math.random() * this.planetas.length);
-    if(!this.planetas[i].nodisponible && !this.planetas[i].centro) {
+    if (!this.planetas[i].nodisponible && !this.planetas[i].centro) {
         this.planetasND.push(this.planetas[i]);
         this.planetas[i].nodisponible = 500;
     }
@@ -365,51 +393,51 @@ Game.prototype.desactivarOrbitaAleatoria = function() {
  * Finaliza el juego, según el modo de juego el resultado será distinto
  * @param {Jugador} superviviente el jugador que ha sobrevivido, si sólo ha sido uno
  */
-Game.prototype.finalizar = function(superviviente) {
+Game.prototype.finalizar = function (superviviente) {
     Log.clear();
-    switch(this.modo) {
+    switch (this.modo) {
         case MODOS.CLASICO:
-            if(superviviente) {
+            if (superviviente) {
                 Log.nuevaNota("Winner: Player " + superviviente.id, superviviente);
                 break;
             }
-            // Si no, esto es como el modo instinto
-            // No break
+        // Si no, esto es como el modo instinto
+        // No break
         case MODOS.INSTINTO:
             var menor = 0;
             var empate = true;
-            for(var i=0; i<this.jugadores.length; i++) {
+            for (var i = 0; i < this.jugadores.length; i++) {
                 var jug = this.jugadores[i];
                 var mins = Math.floor(jug.ultimaMuerte / 60000);
-                var secs = Math.floor((jug.ultimaMuerte - mins*60000)/1000);
-                var mils = Math.floor((jug.ultimaMuerte - mins*60000 - secs*1000));
-                if(mils < 100) mils = "0"+mils.toString();
-                if(mils < 10) mils = "00"+mils.toString();
+                var secs = Math.floor((jug.ultimaMuerte - mins * 60000) / 1000);
+                var mils = Math.floor((jug.ultimaMuerte - mins * 60000 - secs * 1000));
+                if (mils < 100) mils = "0" + mils.toString();
+                if (mils < 10) mils = "00" + mils.toString();
 
                 Log.nuevaNota(
                     "Player " + (jug.id) + ": " +
-                    jug.muertes + " deaths. Last one ("+mins+"' "+secs+"\" "+mils+")", jug);
-                if(empate && jug.muertes !== 0)
+                    jug.muertes + " deaths. Last one (" + mins + "' " + secs + "\" " + mils + ")", jug);
+                if (empate && jug.muertes !== 0)
                     empate = false;
-                if(jug.muertes < this.jugadores[menor].muertes ||
+                if (jug.muertes < this.jugadores[menor].muertes ||
                     (jug.muertes === this.jugadores[menor].muertes &&
                         jug.ultimaMuerte > this.jugadores[menor].ultimaMuerte ))
                     menor = i;
             }
-            if(!empate)
+            if (!empate)
                 Log.nuevaNota("Winner: Player " + this.jugadores[menor].id, this.jugadores[menor]);
             else
                 Log.nuevaNota("Draw!");
             break;
         case 2:
             var mayor = 0;
-            for(i=0; i < this.jugadores.length; i++) {
+            for (i = 0; i < this.jugadores.length; i++) {
                 jug = this.jugadores[i];
-                var nota = "Player " + (jug.id) + ": " + Math.round(jug.tiempo*100)/100 + " seconds.";
-                if(jug.ultimo)
+                var nota = "Player " + (jug.id) + ": " + Math.round(jug.tiempo * 100) / 100 + " seconds.";
+                if (jug.ultimo)
                     nota += " (Last one)";
                 Log.nuevaNota(nota, this.jugadores[i]);
-                if(jug.tiempo > this.jugadores[mayor].tiempo ||
+                if (jug.tiempo > this.jugadores[mayor].tiempo ||
                     (jug.tiempo === this.jugadores[mayor].tiempo && jug.ultimo ))
                     mayor = i;
             }
@@ -430,32 +458,32 @@ Game.prototype.finalizar = function(superviviente) {
 /**
  * Genera el mapa de juego, se llama automáticamente al iniciar el juego
  */
-Game.prototype.generarMapa = function() {
-    if(this.mapaGenerado) return; // No generar dos veces
+Game.prototype.generarMapa = function () {
+    if (this.mapaGenerado) return; // No generar dos veces
     this.mapaGenerado = true;
 
     // En el modo centro hay un Planeta central extra
-    if(this.modo === MODOS.CENTRO) {
+    if (this.modo === MODOS.CENTRO) {
         this.planetas.push(
             new Planeta(MAP.w / 2, MAP.h / 2,
-                RADIO_PLANETA_CENTRO, RADIO_PLANETA_CENTRO*2, true));
+                RADIO_PLANETA_CENTRO, RADIO_PLANETA_CENTRO * 2, true));
     }
 
     //Generar planetas y agujeros
-    for(var i=0; i < this.maxPlanetas; i++) {
+    for (var i = 0; i < this.maxPlanetas; i++) {
         var nuevoPlaneta = globf_generarPlanetaRandom(
             RADIO_PLANETAS_MIN, RADIO_PLANETAS_MAX, this);
         if (!nuevoPlaneta)
             break;
         this.planetas.push(nuevoPlaneta);
-        if(nuevoPlaneta.radioVariable) {
+        if (nuevoPlaneta.radioVariable) {
             this.planetasRV.push(nuevoPlaneta);
         }
     }
 
-    for(i=0; i < this.maxAgujeros; i++) {
+    for (i = 0; i < this.maxAgujeros; i++) {
         var nuevoAgujero = globf_generarAgujeroRandom(
-            CENTRO_AGUJERO_NEGRO,RADIO_AGUJERO_MIN,RADIO_AGUJERO_MAX,this);
+            CENTRO_AGUJERO_NEGRO, RADIO_AGUJERO_MIN, RADIO_AGUJERO_MAX, this);
         if (!nuevoAgujero)
             break;
         this.agujeros.push(nuevoAgujero);
@@ -465,15 +493,15 @@ Game.prototype.generarMapa = function() {
 /**
  * Genera las bolas del juego para poder iniciarlo
  */
-Game.prototype.generarBolas = function() {
-    if(this.bolasGeneradas) return; // No generar dos veces
+Game.prototype.generarBolas = function () {
+    if (this.bolasGeneradas) return; // No generar dos veces
     this.bolasGeneradas = true;
 
     // Hacemos una copia de la lista de planetas, eliminamos el central
     var planetasDisponibles = this.planetas.slice(0);
-    if(this.modo === MODOS.CENTRO) {
-        for(var i in planetasDisponibles)
-            if(planetasDisponibles.hasOwnProperty(i) && planetasDisponibles[i].centro) {
+    if (this.modo === MODOS.CENTRO) {
+        for (var i in planetasDisponibles)
+            if (planetasDisponibles.hasOwnProperty(i) && planetasDisponibles[i].centro) {
                 planetasDisponibles.splice(parseInt(i), 1);
                 break;
             }
@@ -481,17 +509,17 @@ Game.prototype.generarBolas = function() {
 
     // Generamos bolas de los jugadores
     var jugador;
-    for(var idxJugador in this.jugadores) {
-        if(this.jugadores.hasOwnProperty(idxJugador)) {
+    for (var idxJugador in this.jugadores) {
+        if (this.jugadores.hasOwnProperty(idxJugador)) {
             jugador = this.jugadores[idxJugador];
-            for(i=0; i < this.bolasXjugador; i++) {
+            for (i = 0; i < this.bolasXjugador; i++) {
                 this.generarBola(jugador, planetasDisponibles);
             }
         }
     }
 
     // Generamos las bolas extra
-    for(i=0; i < this.numBolasExtra; i++) {
+    for (i = 0; i < this.numBolasExtra; i++) {
         this.generarBola(null, planetasDisponibles);
     }
 };
@@ -501,25 +529,25 @@ Game.prototype.generarBolas = function() {
  * @param {Jugador} jugador Jugador al que asignar la bola, puede ser null si se desea que sea libre
  * @param {Array} planetasDisponibles Lista de planetas todavía disponibles
  */
-Game.prototype.generarBola = function(jugador, planetasDisponibles) {
+Game.prototype.generarBola = function (jugador, planetasDisponibles) {
     var nuevaBola = new Bola("white", jugador);
 
     // Si hay planetas disponibles elegimos el siguiente disponible,
     // si no lo hay, escogemos uno aleatorio
     var pI;
-    if(planetasDisponibles.length > 0) {
+    if (planetasDisponibles.length > 0) {
         pI = Math.floor(Math.random() * planetasDisponibles.length);
-        nuevaBola.planeta = planetasDisponibles[ pI ];
+        nuevaBola.planeta = planetasDisponibles[pI];
         planetasDisponibles.splice(pI, 1);
-    }else{
+    } else {
         pI = Math.floor(Math.random() * this.planetas.length);
-        nuevaBola.planeta = this.planetas[ pI ];
+        nuevaBola.planeta = this.planetas[pI];
     }
     nuevaBola.planeta.bolas.push(nuevaBola);
 
     // Velocidad y angulo
     var sig = Math.pow(-1, Math.round(Math.random())); //Para el signo
-    nuevaBola.vR = sig * (3*Math.PI/4 + Math.PI/2 * Math.random());
+    nuevaBola.vR = sig * (3 * Math.PI / 4 + Math.PI / 2 * Math.random());
     nuevaBola.vRPrevia = nuevaBola.vR;
     nuevaBola.ang = Math.random() * 10;
 
@@ -532,15 +560,15 @@ Game.prototype.generarBola = function(jugador, planetasDisponibles) {
  * puede repetir ya los sonidos
  * @param keyCode
  */
-Game.prototype.puedeRepetirSonidos = function(keyCode) {
-    for(var i in this.jugadores) {
-        if(this.jugadores[i].secondControlId === keyCode
+Game.prototype.puedeRepetirSonidos = function (keyCode) {
+    for (var i in this.jugadores) {
+        if (this.jugadores[i].secondControlId === keyCode
             || this.jugadores[i].controlId === keyCode) {
             this.jugadores[i].noRepetirSonidos = {};
         }
     }
 };
 
-Game.prototype.apagar = function() {
+Game.prototype.apagar = function () {
     this.apagado = true;
 };

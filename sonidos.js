@@ -15,6 +15,8 @@ sonidos.cinta = new Audio('snd/cinta.ogg');
 sonidos.cinta.volume = 0.8;
 sonidos.golpe = new Audio('snd/golpe.ogg');
 sonidos.golpe.volume = 0.8;
+sonidos.dados = new Audio('snd/dados.ogg');
+sonidos.dados.volume = 0.8;
 
 sonidos.finalizado = new Audio('snd/beat_culture_julien.mp3');
 sonidos.finalizado.volume = 0.3;

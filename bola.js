@@ -6,6 +6,7 @@
 function Bola(color, jug) {
     this.v = {x: 0, y: 0};
     this.vR = Math.PI; //Velocidad angular en rad/s (solo efectiva dentro de orbita)
+    this.vRstop = 0; // Para el efecto stop
     this.vRPrevia = this.vR;
     this.maxV = 0.15; // Velocidad angular máxima
     this.incVr = Math.PI / 6; //Aumento de velocidad rad/(s^2)
@@ -19,11 +20,14 @@ function Bola(color, jug) {
     /** @type {Planeta} */
     this.planeta = null; // Planeta asociado
     /** @type {Planeta} */
-    this.planetaAnt = null; // Planeta previo
+    this.planetaAnt = null; // Planeta previo (para evitar que se agarre antes de salir)
+    /** @type {Planeta} */
+    this.planetaRechazado = null; // Planeta del que salió (para el planet lover)
 
     /** @type {?Agujero} */
     this.noTragar = null; // La protege de ser tragada para cuando sale de un agujero negro (gracias al asteroide)
     this.gravedad = false; // Para el asteroide gravedad propia
+    this.planetLover = 0; // Asteroide planet lover
 
     this.viva = true;
     this.maxvidas = 4;
@@ -51,6 +55,7 @@ Bola.prototype.salirOrb = function () {
     this.v.x = u.x * v;
     this.v.y = u.y * v;
     this.planetaAnt = this.planeta;
+    this.planetaRechazado = this.planeta;
     this.planeta.bolas.splice(this.planeta.bolas.indexOf(this), 1);
     this.planeta = null;
     reproducir(sonidos.cambio);
@@ -131,6 +136,17 @@ Bola.prototype.damage = function (juego, mensajeEnCasoDeMuerte, mortal) {
 };
 
 Bola.prototype.updateEnOrbita = function(elapsedSeconds) {
+    if(juego && juego.stopEffect && juego.stopper !== this) {
+        this.vRstop = (this.vR===0?this.vRstop:this.vR);
+        this.vR = 0;
+        return;
+    } else {
+        if(this.vRstop !== 0) {
+            this.vR = this.vRstop;
+            this.vRstop = 0;
+        }
+    }
+
     var r = Math.random();
 
     // Para el cálculo de colisiones

@@ -90,6 +90,8 @@ function generarPreRenderizados(juego) {
 var render = function(juego) {
     ctx.clearRect(0,0,canvas.width / glob_escala.w,canvas.height / glob_escala.h);
 
+    var now = Date.now();
+
     // Escalado del juego
     if(glob_escala.update) {
         glob_escala.update = false;
@@ -143,6 +145,21 @@ var render = function(juego) {
 			ctx.fill();
 			ctx.closePath();
 		}
+
+		if(bola.planetLover) {
+		    var r = (now % 1200)/400 + 1; // Max = 4, min=1
+		    r = Math.sqrt(r) * bola.r;
+            var grd = ctx.createRadialGradient(bola.x,bola.y,0,bola.x,bola.y,r);
+            grd.addColorStop(0,"rgba(140, 0, 0, 0.0)");
+            grd.addColorStop(0.7,"rgba(140, 0, 0, 0.0)");
+            grd.addColorStop(1,"rgba(140, 0, 0, 0.8)");
+
+            ctx.beginPath();
+            ctx.arc(bola.x, bola.y, r, 0, 2*Math.PI);
+            ctx.fillStyle = grd;
+            ctx.fill();
+            ctx.closePath();
+        }
 		
 		grd = ctx.createRadialGradient(bola.x,bola.y,0,bola.x,bola.y,bola.r - 1);
 		ctx.beginPath();
@@ -155,9 +172,9 @@ var render = function(juego) {
 		if(bola.invisible)
 			grd.addColorStop(0.5, "rgba(0,0,0,0)");
 		
-		if(bola.jugador)
-			grd.addColorStop(1, bola.jugador.color);
-		else
+		if(bola.jugador) {
+            grd.addColorStop(1, bola.jugador.color);
+        } else
 			grd.addColorStop(1, "gray");
 			
 		var alpha;
@@ -185,6 +202,19 @@ var render = function(juego) {
             ctx.arc(bola.x, bola.y, bola.r, 0, 2*Math.PI);
             ctx.fillStyle = grd;
             ctx.fill();
+            if(bola.jugador) {
+                if(now - juego.inicioPartida > 1000 && now - juego.inicioPartida < 3000) {
+                    ctx.strokeStyle = bola.jugador.color;
+                    var restan = (3000-(now-juego.inicioPartida))/4000;
+                    ctx.save();
+                    ctx.globalAlpha = restan*restan;
+                    ctx.lineWidth = 5;
+                    ctx.beginPath();
+                    ctx.arc(bola.x, bola.y, Math.sqrt((now-juego.inicioPartida-1000)*100), 0, 2*Math.PI);
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            }
         }
         ctx.closePath();
 		ctx.shadowBlur = 0;
@@ -209,10 +239,10 @@ var render = function(juego) {
     //Reloj
     if(juego.duracion > 0) {
         // Math.round(jugadores[i].ultimaMuerte/60000) mins
-        var restante =  Math.round(juego.duracion*30 - (Date.now() - juego.inicioPartida)/2000);
+        var restante =  Math.round(juego.duracion*30 - (now - juego.inicioPartida)/2000);
 
         if(restante >= 0 && restante < 10) {
-            var rojo = juego.duracion * 60000 - (Date.now() - juego.inicioPartida); //Restante en milisegundos
+            var rojo = juego.duracion * 60000 - (now - juego.inicioPartida); //Restante en milisegundos
             rojo = rojo % 2000; //Cíclico cada 2 segundos
             rojo = (Math.sin(rojo / 1000 * Math.PI + Math.PI / 4) + 1) / 2;
             for (i = 1; i <= restante; i++) {

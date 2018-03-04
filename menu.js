@@ -181,7 +181,6 @@ function initMenu() {
     ];
     const rectsJugadores = tablaJugadores.getElementsByTagName("rect");
     Array.prototype.filter.call(rectsJugadores, function(rect){
-        console.log(rect.parentElement.parentElement.parentElement.style.opacity);
         if(rect.parentElement.parentElement.parentElement.style.opacity !== "0") {
             var idx = Math.floor(Math.random() * coloresDisponibles.length);
             rect.style.fill = coloresDisponibles.splice(idx, 1)[0];
