@@ -79,6 +79,22 @@ Game.prototype.start = function () {
     this.mainLoop();
 };
 
+var measures = ["renderizado",
+    "update",
+    "extra",
+    "physicsUpdate",
+    "noDisponible",
+    "planetas",
+    "bolas"//,
+    // "asteroides",
+    // "bolaLibre",
+    // "orbitar"
+];
+var valores={};
+for(var m in measures) {
+    valores[measures[m]] = [];
+}
+
 /**
  * Bucle principal del juego
  */
@@ -95,10 +111,15 @@ Game.prototype.mainLoop = function () {
     }
 
     if (!this.pausado) {
+        performance.mark("renderizado-start");
         render(this);
+        performance.mark("renderizado-end");
         if (!this.finalizado) {
+            performance.mark("update-start");
             this.update(delta / 1000);
+            performance.mark("update-end");
 
+            performance.mark("extra-start");
             //Fin de partida en modo no clásico
             if (this.duracion > 0 &&
                 now - this.inicioPartida > this.duracion * 60000) {
@@ -122,8 +143,33 @@ Game.prototype.mainLoop = function () {
                     break;
                 }
             }
+            performance.mark("extra-end");
         }
     }
+
+    for(i in measures) {
+        performance.measure(
+            measures[i],
+            measures[i]+"-start",
+            measures[i]+"-end"
+        );
+    }
+
+    var entries = performance.getEntriesByType("measure");
+    for(var e in entries) {
+        valores[entries[e].name].push(entries[e].duration);
+        if(valores[entries[e].name].length === 100) {
+            var suma = 0;
+            for(var v in valores[entries[e].name]) {
+                suma += valores[entries[e].name][v];
+            }
+            console.log(entries[e].name, suma/100);
+            valores[entries[e].name] = [];
+        }
+    }
+
+    performance.clearMarks();
+    performance.clearMeasures();
 
     this.then = now;
     // Request to do this again ASAP
@@ -141,23 +187,30 @@ Game.prototype.mainLoop = function () {
 Game.prototype.update = function (elapsedSeconds) {
     if (elapsedSeconds === 0) return; // No válido
 
+    performance.mark("physicsUpdate-start");
     this.physicsUpdate(elapsedSeconds);
+    performance.mark("physicsUpdate-end");
+    performance.mark("noDisponible-start");
     this.noDisponiblesUpdate();
+    performance.mark("noDisponible-end");
 };
 
 /**
  * Actualiza la física de las bolas
  */
 Game.prototype.physicsUpdate = function (elapsedSeconds) {
+    performance.mark("planetas-start");
     // Actualizamos las colisiones de las que están orbitando,
     // planeta a planeta
     for (var i in this.planetas) {
         var planeta = this.planetas[i];
         planeta.update(elapsedSeconds);
     }
+    performance.mark("planetas-end");
 
     // Actualizamos las colisiones de las bolas
     // que no se encuentran en ningún planeta
+    performance.mark("bolas-start");
     for (i in this.bolas) {
         var bola = this.bolas[i];
 
@@ -185,6 +238,7 @@ Game.prototype.physicsUpdate = function (elapsedSeconds) {
                 bola.planetaAnt = null; // Ya no cuenta el planeta anterior (puede volver a él)
         }
     }
+    performance.mark("bolas-end");
 };
 
 /**
