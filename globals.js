@@ -22,6 +22,9 @@ const VEL_LIN_MIN = 200;
 const PROB_ASTEROIDE = 0.5;
 /** @type {number} Probabilidad (entre mil) para cada frame de desactivar una órbita*/
 const PROB_DESACTIVAR = 1;
+/** @type {number} Probabilidad para cada planeta pequeño de ser un planeta inquieto*/
+const PROB_INQUIETO = 0.002;
+
 
 // LEGACY
 // var coloreF = ["#0000b2", "#990000", "#009900", "#999900", "#009999", "#990099", "#444444", "#FF8000", "#FF7777", "#77FF77"];

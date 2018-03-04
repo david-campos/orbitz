@@ -127,7 +127,6 @@ Game.prototype.update = function(elapsedSeconds) {
     if(elapsedSeconds === 0) return; // No válido
 
     this.physicsUpdate(elapsedSeconds);
-    this.radioVariableUpdate();
     this.noDisponiblesUpdate();
 };
 
@@ -139,7 +138,7 @@ Game.prototype.physicsUpdate = function(elapsedSeconds) {
     // planeta a planeta
     for(var i in this.planetas) {
         var planeta = this.planetas[i];
-        planeta.bolasUpdate(elapsedSeconds);
+        planeta.update(elapsedSeconds);
     }
 
     // Actualizamos las colisiones de las bolas
@@ -331,28 +330,6 @@ Game.prototype.bolaLibreUpdate = function(bola, elapsedSeconds) {
         if(d > ag.r) {
             bola.noTragar = null;
         }
-    }
-};
-
-/**
- * Realiza la actualización de los planetas de radio variable (una vez por frame)
- */
-Game.prototype.radioVariableUpdate = function() {
-    for(var i in this.planetasRV) {
-        var plan = this.planetasRV[i];
-        if(plan.crece)
-            plan.rv += 0.001;
-        else
-            plan.rv -= 0.001;
-        if(plan.rv <= 0.75) {
-            plan.rv = 0.75;
-            plan.crece = true;
-        }
-        if(plan.rv >= 1) {
-            plan.rv = 1;
-            plan.crece = false;
-        }
-        plan.rg = plan.rr * plan.rv;
     }
 };
 

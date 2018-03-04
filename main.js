@@ -66,6 +66,7 @@ function elToquecito() {
 function restart() {
     // Cerramos menu restart
     glob_overscreen.innerHTML = "";
+    sonidos.fondo.pause();
     sonidos.finalizado.pause();
     juego.apagar();
 

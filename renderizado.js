@@ -310,24 +310,22 @@ function dibujarPlaneta(juego, p) {
             }
 	        grd.addColorStop(0.7 * Math.min(p.mayor_t - segundo_mayor, 30) / 30 + 0.2, p.mayor_t_j.color);
 	    } else {
-            grd.addColorStop(0, "rgba(80, 200, 80, 0.4)");
+            grd.addColorStop(0, "rgba(80, 200, 80, 0.2)");
         }
         grd.addColorStop(1,"rgba(80, 200, 80, 0.1)");
-	}
-	else if(!p.nodisponible)
-	{
-		if(p.radioVariable)
-		{
-			grd.addColorStop(0,"rgba(200, 45, 180, 0.4)");
-			grd.addColorStop(1,"rgba(200, 45, 180, 0.1)");
-		}else{
-			grd.addColorStop(0,"rgba(90, 45, 180, 0.4)");
-			grd.addColorStop(1,"rgba(90, 45, 180, 0.1)");
-		}
-	}else{
-		grd.addColorStop(0,"rgba(80, 80, 80, 0.4)");
-		grd.addColorStop(1,"rgba(80, 80, 80, 0.1)");
-	}
+	} else if(p.nodisponible) {
+        grd.addColorStop(0,"rgba(80, 80, 80, 0.4)");
+        grd.addColorStop(1,"rgba(80, 80, 80, 0.1)");
+    } else if(p.inquieto) {
+        grd.addColorStop(0, "rgba(255, 255, 255, 0.4)");
+        grd.addColorStop(1, "rgba(0, 0, 0, 0.1)")
+    } else if(p.radioVariable) {
+        grd.addColorStop(0, "rgba(200, 45, 180, 0.2)");
+        grd.addColorStop(1, "rgba(200, 45, 180, 0.1)")
+    } else {
+        grd.addColorStop(0,"rgba(90, 45, 180, 0.2)");
+        grd.addColorStop(1,"rgba(90, 45, 180, 0.1)");
+    }
 	ctx.beginPath();
 	ctx.arc(p.x, p.y, p.rg, 0, 2*Math.PI);
 	ctx.fillStyle = grd;

@@ -132,7 +132,74 @@ function Planeta(x, y, r, rg, centro) {
         this.rv = 1.0;
         this.crece = false;
     }
+    if(this.r < 35 && Math.random() < PROB_INQUIETO) {
+        this.inquieto = true;
+        this.movingV = 10 + Math.random() * 20; // Muy lentitos
+        this.dir = {x: Math.random() * 2 - 1, y: Math.random() * 2 - 1};
+        var mod = moduloVector(this.dir.x, this.dir.y);
+        this.dir.x /= mod;
+        this.dir.y /= mod;
+    }
 }
+
+Planeta.prototype.update = function(elapsedSeconds) {
+    if(this.radioVariable) {
+        if (this.crece)
+            this.rv += 0.001;
+        else
+            this.rv -= 0.001;
+        if (this.rv <= 0.75) {
+            this.rv = 0.75;
+            this.crece = true;
+        }
+        if (this.rv >= 1) {
+            this.rv = 1;
+            this.crece = false;
+        }
+        this.rg = this.rr * this.rv;
+    }
+
+    if(this.inquieto) {
+        this.dir.x += Math.random() * 0.1 - 0.05;
+        this.dir.y += Math.random() * 0.1 - 0.05;
+        var mod = moduloVector(this.dir.x, this.dir.y);
+        // Velocidad
+        this.dir.x *= this.movingV * elapsedSeconds / mod;
+        this.dir.y *= this.movingV * elapsedSeconds / mod;
+
+        var valido = true;
+        var rg = (this.radioVariable?this.rr:this.rg);
+        var margen = rg + 2*RADIO_BOLAS;
+        var nuevaY = this.y + this.dir.y;
+        var nuevaX = this.x + this.dir.x;
+        if(nuevaX > margen && nuevaX < MAP.w - margen && nuevaY > margen && nuevaY < MAP.h - margen) {
+            for (var i in juego.planetas) {
+                var otroP = juego.planetas[i];
+
+                if (otroP === this)
+                    continue;
+
+                var otroRg = (otroP.radioVariable ? otroP.rr : otroP.rg);
+                if (moduloVector(otroP.x - nuevaX, otroP.y - nuevaY) < otroRg + margen) {
+                    valido = false;
+                    break;
+                }
+            }
+            if (valido) {
+                this.x = nuevaX;
+                this.y = nuevaY;
+            } else {
+                if(Math.random() > 0.5) {
+                    this.dir.x *= -1;
+                } else {
+                    this.dir.y *= -1;
+                }
+            }
+        }
+    }
+
+    this.bolasUpdate(elapsedSeconds);
+};
 
 /**
  * Actualización física de las bolas que orbitan el planeta

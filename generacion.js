@@ -9,8 +9,8 @@ var globf_generarPlanetaRandom = function(rmin, rmax, juego) {
 		rg = r * 2.5;
 
 		vale = true;
-		x = (Math.random() * 10000) % (MAP.w - 2*rg) + rg;
-		y = (Math.random() * 10000) % (MAP.h - 2*rg) + rg;
+		x = (Math.random() * 10000) % (MAP.w - 2 * (rg + RADIO_BOLAS)) + rg + RADIO_BOLAS;
+		y = (Math.random() * 10000) % (MAP.h - 2 * (rg + RADIO_BOLAS)) + rg + RADIO_BOLAS;
 		
 		for(var i in juego.planetas) {
 			var otroP = juego.planetas[i];

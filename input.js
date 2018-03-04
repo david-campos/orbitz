@@ -6,8 +6,13 @@ addEventListener("keydown", function (e) {
 	keysDown[e.keyCode] = true;
 
 	if(e.keyCode === 77) {
-	    // Tecla M = muteBtn
+        // Tecla M = muteBtn
         toggleMute();
+    } else if(e.keyCode === 82) {
+	    if(juego && juego.iniciado &&
+            !juego.pausado && !juego.apagado) {
+	        restart();
+        }
     } else if(e.keyCode === 70) {
 	    // Tecla F = fullscreen
         if(!fullScreen) {
