@@ -66,7 +66,6 @@ Asteroide.prototype.hacerEfecto = function (bola) {
     if (this.tipo === 14 && !bola.jugador) {
         this.tipo = 3;
     }
-    this.tipo = 15;
     switch (this.tipo) {
         case 0:
             bola.invencible = true;

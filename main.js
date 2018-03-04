@@ -10,6 +10,7 @@ window.onload = function() {
     iconos_asteroides.gravedad.src = "img/ico_ancla.png";
     iconos_asteroides.salvador.src = "img/ico_corazon.png";
     iconos_asteroides.transporte.src = "img/ico_rayo.png";
+    iconos_asteroides.planetLover.src = "img/ico_gravedad.png";
     canvas = document.getElementById("mainframe");
     ctx = canvas.getContext("2d");
     glob_overscreen = document.getElementById("overscreen");

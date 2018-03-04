@@ -5,7 +5,8 @@ var iconos_asteroides = {
     fortuna: new Image(),
     gravedad: new Image(),
     salvador: new Image(),
-    transporte: new Image()
+    transporte: new Image(),
+    planetLover: new Image()
 };
 for(var imagen in iconos_asteroides) {
     iconos_asteroides[imagen].ready = false;
@@ -78,7 +79,8 @@ function generarPreRenderizados(juego) {
             fortuna: preRenderizar(215, 215, colorearIcono, iconos_asteroides.fortuna, color),
             gravedad: preRenderizar(215, 215, colorearIcono, iconos_asteroides.gravedad, color),
             salvador: preRenderizar(215, 215, colorearIcono, iconos_asteroides.salvador, color),
-            transporte: preRenderizar(215, 215, colorearIcono, iconos_asteroides.transporte, color)
+            transporte: preRenderizar(215, 215, colorearIcono, iconos_asteroides.transporte, color),
+            planetLover: preRenderizar(215, 215, colorearIcono, iconos_asteroides.planetLover, color)
         };
     }
 }
@@ -433,6 +435,7 @@ function dibujarInterfazAsteroides(juego) {
             jg.gravedad = jg.gravedad || bola.gravedad;
             jg.salvador = jg.salvador || bola.salvado;
             jg.transporte = jg.transporte || bola.transportado;
+            jg.planetLover = jg.planetLover || bola.planetLover;
         }
     }
     var iconos = [];
@@ -450,6 +453,9 @@ function dibujarInterfazAsteroides(juego) {
             iconos.push(prerenderizados.paletaIconos[i].transporte);
         if(jugador.salvador)
             iconos.push(prerenderizados.paletaIconos[i].salvador);
+        if(jugador.planetLover)
+            iconos.push(prerenderizados.paletaIconos[i].planetLover);
+
     }
     var espacio_ico = canvas.width / 24; // 6 habilidades x 4 jugadores = 24
     var lado_ico = espacio_ico * 0.8;
