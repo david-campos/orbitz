@@ -54,7 +54,7 @@ function Asteroide(x, y) {
     var t = Math.floor(r * ast_prob_t);
     for (var i in ast_tipos) {
         if (parseInt(ast_tipos[i][1]) >= t) {
-            this.tipo = parseInt(i) - 1;
+            this.tipo = parseInt(i);
             break;
         }
     }
