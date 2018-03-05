@@ -18,7 +18,7 @@ sonidos.golpe.volume = 0.8;
 sonidos.dados = new Audio('snd/dados.ogg');
 sonidos.dados.volume = 0.8;
 
-sonidos.finalizado = new Audio('snd/beat_culture_julien.mp3');
+sonidos.finalizado = new Audio('snd/beat_culture_julien.ogg');
 sonidos.finalizado.volume = 0.3;
 
 /**
@@ -26,8 +26,8 @@ sonidos.finalizado.volume = 0.3;
  */
 var fondos = [
     new Audio('snd/Jay_Krewel_Break_The_Rules.ogg'),
-    new Audio('snd/Space And Time.mp3'),
-    new Audio('snd/Zythian_Bring_It_Back.mp3')
+    new Audio('snd/Space And Time.ogg'),
+    new Audio('snd/Zythian_Bring_It_Back.ogg')
 ];
 sonidos.cambiarFondo = function() {
     sonidos.fondo = fondos[Math.floor(Math.random() * fondos.length)];
