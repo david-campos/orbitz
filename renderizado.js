@@ -517,22 +517,22 @@ function dibujarInterfazAsteroides(juego) {
             iconos.push(prerenderizados.paletaIconos[i].planetLover);
 
     }
-    var espacio_ico = canvas.width / 24; // 6 habilidades x 4 jugadores = 24
+    var espacio_ico = secondCanvas.width / 24; // 6 habilidades x 4 jugadores = 24
     var lado_ico = espacio_ico * 0.8;
     var margen_ico = espacio_ico * 0.1;
     var espacioOcupado = iconos.length * espacio_ico;
-    var margen_izq = (canvas.width - espacioOcupado)/2;
-    ctx.save();
-    ctx.shadowColor = "#471468";
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 0;
-    ctx.shadowBlur = 10;
-    ctx.scale(1/glob_escala.w, 1/glob_escala.h);
-    ctx.translate(margen_izq, canvas.height - espacio_ico);
+    var margen_izq = (secondCanvas.width - espacioOcupado)/2;
+    scdCtx.save();
+    scdCtx.shadowColor = "#471468";
+    scdCtx.shadowOffsetX = 0;
+    scdCtx.shadowOffsetY = 0;
+    scdCtx.shadowBlur = 10;
+    scdCtx.scale(1/glob_escala.w, 1/glob_escala.h);
+    scdCtx.translate(margen_izq, secondCanvas.height - espacio_ico);
     for(i in iconos) {
-        ctx.translate(margen_ico, 0);
-        ctx.drawImage(iconos[i], 0, 0, lado_ico, lado_ico);
-        ctx.translate(lado_ico + margen_ico, 0);
+        scdCtx.translate(margen_ico, 0);
+        scdCtx.drawImage(iconos[i], 0, 0, lado_ico, lado_ico);
+        scdCtx.translate(lado_ico + margen_ico, 0);
     }
-    ctx.restore();
+    scdCtx.restore();
 }
