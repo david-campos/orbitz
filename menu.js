@@ -29,16 +29,14 @@ function initMenu() {
     Array.prototype.filter.call(todosBotones, function (value) {
         value.onmouseenter = function () {
             if (muteBtn.getAttribute('data-sound') === "1") {
-                const audio = new Audio('snd/pasarBoton.ogg');
-                audio.volume = 0.2;
+                const audio = sonidos.pasarBoton;
                 audio.play();
             }
         };
         value.onmouseup = function (ev) {
 
             if (muteBtn.getAttribute('data-sound') === "1") {
-                const audio = new Audio('snd/clickBoton.ogg');
-                audio.volume = 0.3;
+                const audio = sonidos.clickBoton;
                 audio.play();
             }
         }
