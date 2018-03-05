@@ -131,7 +131,7 @@ var render = function(juego) {
 	}
 	
 	//Agujeros
-    if(!juego.blindGame) {
+    if(!juego.blindGame && imgAgujero.ready) {
         for (i in juego.agujeros) {
             var ag = juego.agujeros[i];
             ctx.save();
