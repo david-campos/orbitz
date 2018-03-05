@@ -3,7 +3,11 @@ requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnim
 var glob_overscreen = null;
 
 window.onload = function() {
-    imgAgujero.src = "img/Agujero.png";
+    imgAgujero.ready = false;
+    imgAgujero.src = "img/agujero.png";
+    imgAgujero.onload = function() {
+        this.ready = true;
+    }
     iconos_asteroides.invencible.src = "img/ico_escudo.png";
     iconos_asteroides.invisible.src = "img/ico_ojo.png";
     iconos_asteroides.fortuna.src = "img/ico_trebol.png";
