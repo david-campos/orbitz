@@ -80,18 +80,6 @@ Game.prototype.start = function () {
     this.mainLoop();
 };
 
-var measures = ["renderizado",
-    "update",
-    "physicsUpdate",
-    "noDisponible",
-    "planetas",
-    "bolas"
-];
-var valores={};
-for(var m in measures) {
-    valores[measures[m]] = [];
-}
-
 /**
  * Bucle principal del juego
  */
@@ -113,7 +101,7 @@ Game.prototype.mainLoop = function () {
             this.physicsUpdate(delta/1000);
             this.noDisponiblesUpdate();
 
-            //Fin de partida en modo no clásico
+            //Fin de partida por tiempo
             if (this.duracion > 0 &&
                 now - this.inicioPartida > this.duracion * 60000) {
                 this.finalizar(null);
@@ -126,6 +114,9 @@ Game.prototype.mainLoop = function () {
             // Blind game
             if(this.blindGame > 0) {
                 this.blindGame -= delta;
+                if(this.blindGame < 0) {
+                    this.blindGame = 0;
+                }
             }
             // Eliminación de notas antiguas
             for (var i in Log.notas) {
