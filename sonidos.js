@@ -35,7 +35,7 @@ sonidos.finalizado.volume = 0.3;
  * @type {[Audio]}
  */
 var fondos = [
-    new Audio('snd/Jay_Krewel_Break_The_Rules' + extension),
+    new Audio('snd/Jay_Krewel_Break_the_Rules' + extension),
     new Audio('snd/Space And Time' + extension),
     new Audio('snd/Zythian_Bring_It_Back' + extension)
 ];

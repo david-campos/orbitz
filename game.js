@@ -429,7 +429,7 @@ Game.prototype.finalizar = function (superviviente) {
             else
                 Log.nuevaNota("Draw!");
             break;
-        case 2:
+        case MODOS.CENTRO:
             var mayor = 0;
             for (i = 0; i < this.jugadores.length; i++) {
                 jug = this.jugadores[i];
